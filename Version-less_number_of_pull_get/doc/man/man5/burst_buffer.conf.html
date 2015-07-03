@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>burst_buffer.conf</H1>
+Section: Slurm configuration file (5)<BR>Updated: December 2014<BR><A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+burst_buffer.conf - Slurm configuration file for burst buffer management.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<B>burst_buffer.conf</B> is an ASCII file which describes the configuration
+of burst buffer resource management.
+This file is only required on the head node(s), where the slurmctld daemon
+executes.
+The file location can be modified at system build time using the
+DEFAULT_SLURM_CONF parameter or at execution time by setting the SLURM_CONF
+environment variable.
+The file will always be located in the same directory as the <B>slurm.conf</B>
+file.
+In order to support multiple configuration files for mutliple burst buffer
+plugins, the configuration file may alternately be given a name containing
+the plugin name.
+For example, if &quot;burst_buffer.conf&quot; is not found, the burst_buffer/generic
+configuration could be read from a file named &quot;burst_buffer_generic.conf&quot;.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of
+Slurm daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot;.
+<P>
+
+The configuration parameters available include:
+<P>
+<DL COMPACT>
+<a id="OPT_AllowUsers"></a>
+<DT><B>AllowUsers</B><DD>
+Colon delimited list of user names and/or IDs permitted to use burst buffers.
+The options <B>AllowUsers</B> and <B>DenyUsers</B> can not both be specified.
+By default all users are permitted to use burst buffers.
+<BR>&nbsp;
+<a id="OPT_DenyUsers"></a>
+<DT><B>DenyUsers</B><DD>
+Colon delimited list of user names and/or IDs prevented from using burst buffers.
+The options <B>AllowUsers</B> and <B>DenyUsers</B> can not both be specified.
+By default all users are permitted to use burst buffers.
+<P>
+<a id="OPT_GetSysState"></a>
+<DT><B>GetSysState</B><DD>
+Fully qualified path name of a program which will return the current burst
+buffer state.
+This should be the path of the <I>bbs_pools</I> command for the Cray plugin.
+Other Cray burst buffer commands are assumed to be in the same directory
+as the bbs_pools command.
+See the src/plugins/burst_buffer/generic/bb_get_state.example in the
+Slurm distribution for an example.
+<P>
+<a id="OPT_Granularity"></a>
+<DT><B>Granularity</B><DD>
+Granularity of job space allocations in units of gigabytes.
+The default value is 1 gigabyte.
+<P>
+&nbsp;
+Possible future enhancement
+&nbsp;
+.TP
+&nbsp;
+<B>Gres</B>
+&nbsp;
+Generic resources associated with burst buffers.
+&nbsp;
+This is a completely separate name space from the Gres defined in the slurm.conf
+&nbsp;
+file.
+&nbsp;
+The Gres value consistes of a comma separated list of generic resources,
+&nbsp;
+each of which includes a name separated by a colon and a numeric value.
+&nbsp;
+The numeric value can include a suffic of &quot;k&quot;, &quot;m&quot; or &quot;g&quot;, which multiplies
+&nbsp;
+the numeric value by 1,024, 1,048,576, or 1,073,741,824 respectively.
+&nbsp;
+The numeric value is a 32-bit value.
+&nbsp;
+See the example below.
+<P>
+<a id="OPT_JobSizeLimit"></a>
+<DT><B>JobSizeLimit</B><DD>
+Maximum burst buffer allocation size for any single job.
+The numeric value may have a suffix of &quot;m&quot; (megabytes), &quot;g&quot; (gigabytes),
+&quot;t&quot; (terabytes), &quot;p&quot; (petabytes), or &quot;n&quot; (nodes).
+Gigabytes is assumed if no suffix is supplied.
+By default there is no job allocation size limit.
+<P>
+<a id="OPT_PrioBoostUse"></a>
+<DT><B>PrioBoostUse</B><DD>
+Any job using burst buffers will have it's priority increased by this amount.
+This option will adjust a job's nice value, so user specified nice values
+for a job will be replaced by this value.
+<P>
+<a id="OPT_PrioBoostAlloc"></a>
+<DT><B>PrioBoostAlloc</B><DD>
+Any job using burst buffers will have it's priority increased by this amount
+after its file stage in has completed.
+This option will adjust a job's nice value, so user specified nice values
+for a job will be replaced by this value.
+he <B>PrioBoostAlloc</B> value will override the <B>PrioBoostUse</B> value.
+<P>
+<a id="OPT_PrivateData"></a>
+<DT><B>PrivateData</B><DD>
+If set to &quot;true&quot; then users will only be able to view burst buffers they can
+use.
+Slurm administrators will still be able to view all burst buffers.
+By default, users can view all burst buffers.
+<P>
+<a id="OPT_StageInTimeout"></a>
+<DT><B>StageInTimeout</B><DD>
+If the stage in of files for a job takes more than this number of seconds,
+the burst buffer will be released and the job will be placed in a held state.
+A Slurm administrator will be required to release the job.
+By default there is no timeout of the stage in process.
+<P>
+<a id="OPT_StageOutTimeout"></a>
+<DT><B>StageOutTimeout</B><DD>
+If the stage out of files for a job takes more than this number of seconds,
+the burst buffer will be released and the job will be purged.
+By default there is no timeout of the stage out process.
+<P>
+<a id="OPT_StartStageIn"></a>
+<DT><B>StartStageIn</B><DD>
+Fully qualified path name of a program which will stage files in for a job.
+This option is used by the generic plugin and ignored by the cray plugin.
+See the src/plugins/burst_buffer/generic/bb_start_stage_in.example in the
+Slurm distribution for an example.
+<P>
+<a id="OPT_StartStageOut"></a>
+<DT><B>StartStageOut</B><DD>
+Fully qualified path name of a program which will stage files out for a job.
+This option is used by the generic plugin and ignored by the cray plugin.
+See the src/plugins/burst_buffer/generic/bb_start_stage_out.example in the
+Slurm distribution for an example.
+<P>
+<a id="OPT_StopStageIn"></a>
+<DT><B>StopStageIn</B><DD>
+Fully qualified path name of a program which will stop staging files in for a job.
+This option is used by the generic plugin and ignored by the cray plugin.
+See the src/plugins/burst_buffer/generic/bb_stop_stage_out.example in the
+Slurm distribution for an example.
+<P>
+<a id="OPT_StopStageOut"></a>
+<DT><B>StopStageOut</B><DD>
+Fully qualified path name of a program which will stop staging files in for a job.
+This option is used by the generic plugin and ignored by the cray plugin.
+See the src/plugins/burst_buffer/generic/bb_stop_stage_out.example in the
+Slurm distribution for an example.
+<P>
+<a id="OPT_UserSizeLimit"></a>
+<DT><B>UserSizeLimit</B><DD>
+Maximum burst buffer allocation size for any single user.
+The size is calculated by adding the burst buffer allocations for all jobs
+plus any persistent buffers belonging to the user.
+The numeric value may have a suffix of &quot;m&quot; (megabytes), &quot;g&quot; (gigabytes),
+&quot;t&quot; (terabytes), &quot;p&quot; (petabytes), or &quot;n&quot; (nodes).
+Gigabytes is assumed if no suffix is supplied.
+By default there is no job allocation size limit.
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_EXAMPLE"></a>
+<H2>EXAMPLE</H2>
+
+<P>
+
+<BR>
+
+##################################################################
+<BR>
+
+# Slurm's burst buffer configuration file (burst_buffer.conf)
+<BR>
+
+##################################################################
+<BR>
+
+AllowUsers=alan,brenda
+<BR>
+
+PrivateData=true
+&nbsp;
+.br
+&nbsp;
+Gres=nodes:10,other:20
+<BR>
+
+#
+<BR>
+
+Granularity=1GB
+<BR>
+
+JobSizeLimit=200GB   # Applies to each job
+<BR>
+
+UserSizeLimit=500GB  # Applies to each user
+<BR>
+
+#
+<BR>
+
+PrioBoostUse=100
+<BR>
+
+PrioBoostAlloc=200
+<BR>
+
+#
+<BR>
+
+StageInTimeout=30    # Seconds
+<BR>
+
+StageOutTimeout=30   # Seconds
+<BR>
+
+#
+<BR>
+
+GetSysState=/usr/local/slurm/15.08/sbin/GSS
+<BR>
+
+StartStageIn=/usr/local/slurm/15.08/sbin/SSI
+<BR>
+
+StartStageOut=/usr/local/slurm/15.08/sbin/SSO
+<BR>
+
+StopStageIn=/usr/local/slurm/15.08/sbin/PSI
+<BR>
+
+StopStageOut=/usr/local/slurm/15.08/sbin/PSO
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2014 SchedMD LLC.
+<P>
+
+This file is part of Slurm, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+Slurm is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+Slurm is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:33 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>

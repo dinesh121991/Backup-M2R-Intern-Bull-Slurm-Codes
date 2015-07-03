@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>cray.conf</H1>
+Section: Slurm configuration file (5)<BR>Updated: December 2013<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+cray.conf - Slurm configuration file for the Cray-specific information
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<B>cray.conf</B> is an ASCII file which defines parameters used by 
+Slurm's select/cray plugin in support of Cray systems.
+The file location can be modified at system build time using the
+DEFAULT_SLURM_CONF parameter or at execution time by setting the SLURM_CONF
+environment variable. The file will always be located in the
+same directory as the <B>slurm.conf</B> file.
+The default configuration parameters will work properly in a typical
+installation and this file will not be required.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+Changes to the configuration file take effect upon restart of
+SLURM daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot; unless otherwise noted.
+<P>
+
+The configuration parameters available include:
+<P>
+<DL COMPACT>
+<a id="OPT_AlpsEngine"></a>
+<DT><B>AlpsEngine</B>=&lt;engine_version&gt;<DD>
+Communication protocol version number to be used between Slurm and ALPS/BASIL.
+The default value is BASIL's response to the ENGINE query.
+Use with caution: Changes in ALPS communications which are not recognized
+by Slurm could result in loss of jobs.
+Currently supported values include
+1.1, 1.2.0, 1.3.0, 3.1.0, 4.0, 4.1.0, 4.2.0, 5.0, 5.1, 5.2 or &quot;latest&quot;.
+A value of &quot;latest&quot; will use the most current version of Slurm's logic and
+can be useful for validation with new versions of ALPS.
+<P>
+<a id="OPT_AlpsDir"></a>
+<DT><B>AlpsDir</B>=&lt;pathname&gt;<DD>
+Fully qualified pathname of the directory in which ALPS is installed.
+The default value is <I>/usr</I>.
+<P>
+<a id="OPT_apbasil"></a>
+<DT><B>apbasil</B>=&lt;pathname&gt;<DD>
+Fully qualified pathname to the apbasil command.
+The default value is <I>/usr/bin/apbasil</I>.
+<P>
+<a id="OPT_apbasilTimeout"></a>
+<DT><B>apbasilTimeout</B>=&lt;seconds&gt;<DD>
+How many seconds to wait for the apbasil command to complete before killing it.
+By default, wait indefinitely
+<P>
+<a id="OPT_apkill"></a>
+<DT><B>apkill</B>=&lt;pathname&gt;<DD>
+Fully qualified pathname to the apkill command.
+The default value is <I>/usr/bin/apkill</I>.
+<P>
+<a id="OPT_SDBdb"></a>
+<DT><B>SDBdb</B>=&lt;dbname&gt;<DD>
+Name of the ALPS database.
+The default value is <I>XTAdmin</I>.
+<P>
+<a id="OPT_SDBhost"></a>
+<DT><B>SDBhost</B>=&lt;dbname&gt;<DD>
+Hostname of the database server.
+The default value is <I>sdb</I>.
+<P>
+<a id="OPT_SDBpass"></a>
+<DT><B>SDBpass</B>=&lt;password&gt;<DD>
+Password used to access the ALPS database.
+The default value is NULL, which will load the password from the <I>my.cnf</I> file.
+<P>
+<a id="OPT_SDBport"></a>
+<DT><B>SDBport</B>=&lt;port_number&gt;<DD>
+Port used to access the ALPS database.
+The default value is 0.
+<P>
+<a id="OPT_SDBuser"></a>
+<DT><B>SDBuser</B>=&lt;user_name&gt;<DD>
+Name of user used to access the ALPS database.
+The default value is NULL, which will load the user name from the <I>my.cnf</I> file.
+<P>
+<a id="OPT_SubAllocate"></a>
+<DT><B>SubAllocate</B>=Yes<DD>
+Only allocate requested node resources instead of the whole node.  In both
+cases the user will be charged for the entire node.
+This is the Slurm &lt;=2.5 behavior.
+<P>
+<a id="OPT_SyncTimeout"></a>
+<DT><B>SyncTimeout</B>=&lt;seconds&gt;<DD>
+SLURM does not normally schedule jobs while its job or node state information
+is out of synchronization with that of ALPS. This parameter specifies a maximum
+time to defer job scheduling while waiting for consistent state.  The
+inconsistent state might be caused by a variety of hardware or software
+failures and proceeding could result in more failures. The default value is
+3600 (one hour). A value of zero will wait indefinitely for consistent state.
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_EXAMPLE"></a>
+<H2>EXAMPLE</H2>
+
+<P>
+
+<BR>
+
+###
+<BR>
+
+# Slurm Cray support configuration file
+<BR>
+
+###
+<BR>
+
+apbasil=/opt/alps_simulator_40_r6768/apbasil.sh
+<BR>
+
+SDBhost=localhost
+<BR>
+
+SDBuser=alps_user
+<BR>
+
+SDBdb=XT5istanbul
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2011-2013 SchedMD LLC.
+<P>
+
+This file is part of SLURM, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:33 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>

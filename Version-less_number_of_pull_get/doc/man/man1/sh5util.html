@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>sh5util</H1>
+Section: SLURM Commands (1)<BR>Updated: SLURM 2.6<BR><A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+<P>
+
+sh5util - Tool for merging HDF5 files from the acct_gather_profile
+plugin that gathers detailed data for jobs running under SLURM
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_SYNOPSIS"></a>
+<H2>SYNOPSIS</H2>
+
+<P>
+
+sh5util
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<P>
+
+sh5util merges HDF5 files produced on each node for each step of a job into
+one HDF5 file for the job. The resulting file can be viewed and manipulated
+by common HDF5 tools such as HDF5View, h5dump, h5edit, or h5ls.
+<P>
+
+sh5util also has two extract modes. The first, writes a limited set of
+data for specific nodes, steps, and data series in
+&quot;comma separated value&quot; form to a file which can be imported into other
+analysis tools such as spreadsheets.
+<P>
+
+The second, (Item-Extract) extracts one data time from one time series for all
+the samples on all the nodes from a jobs HDF5 profile.
+<DL COMPACT>
+<DT>- Finds sample with maximum value of the item.<DD>
+<DT>- Write CSV file with min, ave, max, and item totals for each node for each<DD>
+sample
+<P>
+<P>
+</DL>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_OPTIONS"></a>
+<H2>OPTIONS</H2>
+
+<P>
+
+<P>
+<DL COMPACT>
+<a id="OPT_extract"></a>
+<DT><B>-E</B>, <B>--extract</B><DD>
+<P>
+Extract data series from a merged job file.
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>Extract mode options<DD>
+<P>
+<a id="OPT_input"></a>
+<DT><B>-i</B>, <B>--input</B>=<I>path</I><DD>
+merged file to extract from (default ./job_$jobid.h5)
+<P>
+<a id="OPT_node"></a>
+<DT><B>-N</B>, <B>--node</B>=<I>nodename</I><DD>
+Node name to extract (default is all)
+<P>
+<a id="OPT_level"></a>
+<DT><B>-l</B>, <B>--level</B>=<I>[Node:Totals|Node:TimeSeries]</I><DD>
+Level to which series is attached. (default Node:Totals)
+<P>
+<a id="OPT_series"></a>
+<DT><B>-s</B>, <B>--series</B>=<I>[Energy | Lustre | Network | Tasks | Task_#]</I><DD>
+<B>Tasks</B> is all tasks, <B>Task_#</B> (# is a task id) (default is everything)
+<P>
+</DL>
+</DL>
+
+<P>
+<a id="OPT_item-extract"></a>
+<DT><B>-I</B>, <B>--item-extract</B><DD>
+<P>
+Extract one data item from all samples of one data series from all nodes in a merged job file.
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT>Item-Extract mode options<DD>
+<P>
+<a id="OPT_series"></a>
+<DT><B>-s</B>, <B>--series</B>=[Energy | Lustre | Network | Task]<DD>
+<P>
+<a id="OPT_data"></a>
+<DT><B>-d</B>, <B>--data</B><DD>
+Name of data item in series (See note below).
+<P>
+</DL>
+</DL>
+
+<P>
+<a id="OPT_jobs"></a>
+<DT><B>-j</B>, <B>--jobs</B>=<I>&lt;job(.step)&gt;</I><DD>
+Format is &lt;job(.step)&gt;. Merge this job/step
+(or a comma-separated list of job steps). This option is required.
+Not specifying a step will result in all steps found to be processed.
+<P>
+<a id="OPT_help"></a>
+<DT><B>-h</B>, <B>--help</B><DD>
+Print this description of use.
+<P>
+<a id="OPT_output"></a>
+<DT><B>-o</B>, <B>--output</B>=<I>path</I><DD>
+<PRE>
+Path to a file into which to write.
+Default for merge is ./job_$jobid.h5
+Default for extract is ./extract_$jobid.csv
+</PRE>
+
+<P>
+<a id="OPT_profiledir"></a>
+<DT><B>-p</B>, <B>--profiledir</B>=<I>dir</I><DD>
+Directory location where node-step files exist default is set in
+acct_gather.conf.
+<P>
+<a id="OPT_savefiles"></a>
+<DT><B>-S</B>, <B>--savefiles</B><DD>
+Instead of removing node-step files after merging them into the job file,
+keep them around.
+<P>
+<a id="OPT_user"></a>
+<DT><B>--user</B>=<I>user</I><DD>
+User who profiled job.
+(Handy for root user, defaults to user running this command.)
+<P>
+<a id="OPT_usage"></a>
+<DT><B>--usage</B><DD>
+Display brief usage message.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_Data Items per Series"></a>
+<H2>Data Items per Series</H2>
+
+<P>
+<DL COMPACT>
+<a id="OPT_Energy"></a>
+<DT><B>Energy</B><DD>
+<PRE>
+Power
+CPU_Frequency
+</PRE>
+
+<P>
+<a id="OPT_Lustre"></a>
+<DT><B>Lustre</B><DD>
+<PRE>
+Reads
+Megabytes_Read
+Writes
+Megabytes_Write
+</PRE>
+
+<P>
+<a id="OPT_Network"></a>
+<DT><B>Network</B><DD>
+<PRE>
+Packets_In
+Megabytes_In
+Packets_Out
+Megabytes_Out
+</PRE>
+
+<P>
+<a id="OPT_Task"></a>
+<DT><B>Task</B><DD>
+<PRE>
+CPU_Frequency
+CPU_Time
+CPU_Utilization
+RSS
+VM_Size
+Pages
+Read_Megabytes
+Write_Megabytes
+</PRE>
+
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<a id="SECTION_Examples"></a>
+<H2>Examples</H2>
+
+<P>
+<DL COMPACT>
+<DT>Merge node-step files (as part of a sbatch script)<DD>
+</DL>
+<P>
+
+sbatch -n1 -d$SLURM_JOB_ID --wrap=&quot;sh5util --savefiles -j $SLURM_JOB_ID&quot;
+<P>
+<DL COMPACT>
+<DT>Extract all task data from a node<DD>
+</DL>
+<P>
+
+sh5util -j 42 -N snowflake01 --level=Node:TimeSeries --series=Tasks
+<P>
+<DL COMPACT>
+<DT>Extract all energy data<DD>
+sh5util -j 42 --series=Energy --data=power
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2013 Bull.
+<BR>
+
+Copyright (C) 2013 SchedMD LLC.
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAI">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">Data Items per Series</A><DD>
+<DT><A HREF="#lbAG">Examples</A><DD>
+<DT><A HREF="#lbAH">COPYING</A><DD>
+<DT><A HREF="#lbAI">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:32 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>
