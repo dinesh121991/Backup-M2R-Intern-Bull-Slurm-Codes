@@ -1,0 +1,418 @@
+#!/usr/bin/ruby
+ 
+# resubmit a swf trace file
+require 'pp'
+require 'getoptlong'
+require './lib_swf.rb'
+require "./OAR.rb"
+require "./SLURM.rb"
+
+############
+# Options
+############
+
+def usage_message
+    <<EOS
+Usage ./riplay [OPTIONS]
+
+        OPTIONS:
+                --swf_file | -f swf_file     : specify the workload file
+                --batch | -b batch           : specify the batch scheduler to use (OAR or SLURM)
+                --job_type | -j job_type     : specify the job type (ior or sleep) 
+                --output_dir | -o output_dir : specify the output_dir
+                --startjob | -s job_id       : starting job id
+                --endjob | -e job_id         : ending job id
+                --help | -h                  : display this help message
+                --debug | -d                 : debug mode
+                --scale | -x nb_procs        : number of procs in the cluster where the trace will be submitted
+                --time_scale | -t coefficient: timescale reducing coefficient
+                --replay_environment | -r    : replay the trace in its environment (queued and running jobs)
+                --users | -u                 : submit job with users (only works with slurm)
+                --energy | -w                : submit job with energy in comment (only works with slurm)
+                --powercap | -p              : submit powercaps to slurm (read from swf PowerCapValues header)
+                --security_time wait_time    : riplay will wait wait_time seconds between the env setup and the run (default: 0)
+                --powercapScript scriptPath  : Use this script to submit powerCap instead of the default behavior
+                                               The script will be launch with the following parameters:
+                                               StartTime Lenght PowerCapValue
+EOS
+end
+
+opts = GetoptLong.new(
+[ "--swf_file","-f",            GetoptLong::REQUIRED_ARGUMENT ],
+[ "--batch","-b",               GetoptLong::REQUIRED_ARGUMENT ],
+[ "--job_type","-j",            GetoptLong::REQUIRED_ARGUMENT ],
+[ "--output_dir","-o",          GetoptLong::REQUIRED_ARGUMENT ],
+[ "--help","-h",                GetoptLong::NO_ARGUMENT ],
+[ "--debug","-d",               GetoptLong::NO_ARGUMENT ],
+[ "--startjob","-s",            GetoptLong::REQUIRED_ARGUMENT ],
+[ "--endjob","-e",              GetoptLong::REQUIRED_ARGUMENT ],
+[ "--scale","-x",               GetoptLong::REQUIRED_ARGUMENT ],
+[ "--time_scale","-t",          GetoptLong::REQUIRED_ARGUMENT ],
+[ "--replay_environment","-r",  GetoptLong::NO_ARGUMENT ],
+[ "--users","-u",               GetoptLong::NO_ARGUMENT ],
+[ "--energy","-w",              GetoptLong::NO_ARGUMENT ],
+[ "--powercap","-p",            GetoptLong::NO_ARGUMENT ],
+[ "--security_time",            GetoptLong::REQUIRED_ARGUMENT ],
+[ "--powercapScript",           GetoptLong::REQUIRED_ARGUMENT ]
+)
+
+$job_type = 'sleep'
+$output_dir = '.'
+$debug = false
+$env = false
+$use_users = false 
+$use_energy = false 
+$use_powercap = false 
+$security_time_wait_running = 0
+$batch = ""
+$powercapScript = nil
+
+opts.each do |option, value| 
+        if (option == "--swf_file")
+                $swf_file = value
+        elsif (option == "--batch")
+                $batch = value
+        elsif (option =="--job_type")
+                $job_type= value
+        elsif (option == "--output_dir")
+                $output_dir = value
+        elsif (option == "--endjob")
+                $ending_job = value
+        elsif (option == "--startjob")
+                $initial_job = value
+        elsif (option == "--scale")
+                $scale = value
+        elsif (option == "--time_scale")
+                $timescale = value
+        elsif (option == "--debug")
+                $debug = true 
+        elsif (option == "--replay_environment")
+                $env = true 
+        elsif (option == "--users")
+                $use_users = true
+        elsif (option == "--energy")
+                $use_energy = true
+        elsif (option == "--powercap")
+                $use_powercap = true
+        elsif (option == "--security_time")
+                $security_time_wait_running = value
+        elsif (option == "--powercapScript")
+                $powercapScript = value
+        elsif (option == "--help")
+                puts usage_message
+                exit 0
+  end
+end
+
+if($batch == '')
+	puts "You have to choose a batch."
+	exit 1
+end
+
+if ($use_users && Process.uid != 0)
+        puts 'With option "--users", riplay must run as root.' 
+        exit 1
+end
+if ( ($use_users or $use_energy) && $batch == 'OAR')
+        puts 'OAR can\'t deal with options "--users" and "--energy" for now.' 
+        exit 1
+end
+if ($use_users)
+        puts "WARNING: if current directory is not chmod 777, slurm can fail without error."
+end
+
+if($powercapScript != nil and not $use_powercap)
+        puts "--powercapScript needs --powercap" 
+        exit 1
+end
+
+############
+# Functions
+############
+
+
+def submit(job, schedule_now)
+    if ($batch == "OAR" || $batch == "oar" )
+        oarsub(job, $job_type, $output_dir, schedule_now)
+    elsif ($batch == "SLURM" || $batch == "slurm" )      
+        sbatch(job, $job_type, $output_dir, schedule_now, $use_users, $use_energy)
+    end
+end
+
+def resume(jobs_to_resume)
+    if ($batch == "OAR" || $batch == "oar" )
+        oarresume(jobs_to_resume)
+    elsif ($batch == "SLURM" || $batch == "slurm" )      
+        slurmresume(jobs_to_resume)
+    end
+end
+
+def make_energy_resv(time, duration, watts)
+    if ($batch == "OAR" || $batch == "oar" )
+        oarmake_energy_resv(time, duration, watts)
+    elsif ($batch == "SLURM" || $batch == "slurm" )
+        slurmmake_energy_resv(time, duration, watts)
+    end
+end
+
+############
+# MAIN
+############
+date = `date +%s`.chomp
+puts "#{date} -- Loading Workload File..." if $debug
+jobs = load_swf_file($swf_file, $initial_job, $ending_job)
+
+
+if $use_powercap && (jobs["info"]["stat"].powercap_resvs == nil ||  jobs["info"]["stat"].powercap_value == nil)
+	p "Error: No powercap data in the swf file."
+	p "Exemple:"
+	p "; PowerCapValue: 12000"
+	p "; PowerCapResvs: (5,0,7) (10,11,51)"
+	p "                 (start, duration, watt) ..."
+	exit()
+end
+
+if $use_powercap
+	powercap_resvs = jobs["info"]["stat"].powercap_resvs
+	powercap_value = jobs["info"]["stat"].powercap_value
+end
+
+
+jobs_running={}
+jobs_queued={}
+
+if($env)
+jobs_running = load_swf_file("#{$swf_file}.running", nil, nil)
+jobs_queued = load_swf_file("#{$swf_file}.queued", nil, nil)
+end
+if jobs["info"]["bad_stat"].bad_jobs!=0 
+    puts "Some jobs were BAD: "
+    pp jobs["info"]["bad_stat"]
+    exit 1
+end
+
+# SCALE WORKLOAD RESOURCES ALLOC TO THE CLUSTER SIZE # TODO: more intelligent scaling
+procs_in_trace = jobs["info"]["stat"].nb_procs.to_i
+if $scale != nil
+    procs_in_cluster = $scale.to_i
+    jobs.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_cpu_req = job_struct.procs_alloc*procs_in_cluster/procs_in_trace
+            if new_cpu_req == 0
+                new_cpu_req = 1             # Min nb of cores to ask = 1
+            end
+            job_struct.procs_req = new_cpu_req
+            job_struct.procs_alloc = new_cpu_req
+        end                    
+    end  
+    
+    # same for jobs_running and jobs_queued
+    jobs_running.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_cpu_req = job_struct.procs_alloc*procs_in_cluster/procs_in_trace
+            if new_cpu_req == 0
+                new_cpu_req = 1             # Min nb of cores to ask = 1
+            end
+            job_struct.procs_req = new_cpu_req
+            job_struct.procs_alloc = new_cpu_req
+        end                    
+    end 
+    jobs_queued.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_cpu_req = job_struct.procs_alloc*procs_in_cluster/procs_in_trace
+            if new_cpu_req == 0
+                new_cpu_req = 1             # Min nb of cores to ask = 1
+            end
+            job_struct.procs_req = new_cpu_req
+            job_struct.procs_alloc = new_cpu_req
+        end                    
+    end
+    
+	if $use_powercap
+		powercap_resvs.each do |t|
+			t[2] = t[2]*procs_in_cluster/procs_in_trace
+		end
+	end
+
+end
+#
+
+# SCALE WORKLOAD DURATION 
+if $timescale != nil
+    jobs.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_submit_time = job_struct.submit_time/$timescale.to_f
+            new_wait_time = job_struct.wait_time/$timescale.to_f
+            new_run_time = job_struct.run_time/$timescale.to_f
+            new_requested_time = job_struct.run_time_req/$timescale.to_f.ceil
+            new_think_time = job_struct.preceding_job_think_time/$timescale.to_f
+
+            job_struct.submit_time = new_submit_time
+            job_struct.wait_time = new_wait_time
+            job_struct.run_time = new_run_time
+            job_struct.run_time_req = new_requested_time
+            job_struct.preceding_job_think_time = new_think_time
+        end                    
+    end   
+    
+    # same for jobs_running and jobs_queued
+    jobs_running.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_submit_time = job_struct.submit_time/$timescale.to_f
+            new_wait_time = job_struct.wait_time/$timescale.to_f
+            new_run_time = job_struct.run_time/$timescale.to_f
+            new_requested_time = job_struct.run_time_req/$timescale.to_f.ceil
+            new_think_time = job_struct.preceding_job_think_time/$timescale.to_f
+
+            job_struct.submit_time = new_submit_time
+            job_struct.wait_time = new_wait_time
+            job_struct.run_time = new_run_time
+            job_struct.run_time_req = new_requested_time
+            job_struct.preceding_job_think_time = new_think_time
+        end                    
+    end 
+    jobs_queued.each_pair do |job_id, job_struct|
+        if !(job_id =~ /^info/)
+            new_submit_time = job_struct.submit_time/$timescale.to_f
+            new_wait_time = job_struct.wait_time/$timescale.to_f
+            new_run_time = job_struct.run_time/$timescale.to_f
+            new_requested_time = job_struct.run_time_req/$timescale.to_f.ceil
+            new_think_time = job_struct.preceding_job_think_time/$timescale.to_f
+
+            job_struct.submit_time = new_submit_time
+            job_struct.wait_time = new_wait_time
+            job_struct.run_time = new_run_time
+            job_struct.run_time_req = new_requested_time
+            job_struct.preceding_job_think_time = new_think_time
+        end                    
+    end
+    
+	if $use_powercap
+		powercap_resvs.each do |t|
+			t[0] = t[0]/$timescale.to_f
+			t[1] = t[1]/$timescale.to_f
+		end
+	end
+end
+#
+
+submission_hash = Hash.new { |hash, key| hash[key] = [] }    # {start_time => [job_ids]}
+submission_table_relative_times = []                         # [ [relative_wait, [job_ids]] [relative_wait, [job_ids]] ...]
+
+
+
+# now we can delete the 'info' key in the hashes
+jobs.delete("info") 
+jobs_running.delete("info") if(!jobs_running.empty?)
+jobs_queued.delete("info") if(!jobs_queued.empty?)
+
+jobs.keys.sort.each do |job_id|
+    job_struct = jobs[job_id]
+    if(job_struct.procs_alloc!=0)
+        submission_hash[job_struct.submit_time] << job_id
+        submission_hash[job_struct.submit_time] = submission_hash[job_struct.submit_time].sort
+    end                    
+end
+
+
+### time to wait for all the running jobs to run, must be added to runtime and walltime
+#security_time_wait_running = 60
+security_time_wait_running = $security_time_wait_running.to_i
+
+
+if $use_powercap
+	powercap_resvs.each do |p|
+		if $powercapScript == nil
+			make_energy_resv(p[0], p[1], p[2])
+		else
+			puts "# #{$powercapScript} #{p[0]} #{p[1]} #{p[2]}" if $debug && $env
+			print `#{$powercapScript} #{p[0]} #{p[1]} #{p[2]}`
+		end
+	end
+end
+
+# submit running jobs
+date = `date +%s`.chomp
+puts "#{date} -- Starting submission in hold mode of the jobs running before workload trace..." if $debug && $env
+# submit running jobs in hold mode
+jobs_running.keys.sort.each do |job_id|
+    job_struct = jobs_running[job_id]
+    if(job_struct.procs_alloc!=0)
+        job_struct.run_time = job_struct.run_time + security_time_wait_running
+        job_struct.run_time_req = job_struct.run_time_req + security_time_wait_running
+        submit(job_struct, false)
+    end
+end
+
+# queued jobs should be submitted here...
+
+
+# now it's time to resume the jobs
+# resume the hold jobs to be ran
+resume(jobs_running) if(!jobs_running.empty?)
+
+
+# submit queued jobs
+date = `date +%s`.chomp
+puts "#{date} -- Starting submission of the jobs queued at the time of the workload trace..." if $debug && $env
+jobs_queued.keys.sort.each do |job_id|
+    job_struct = jobs_queued[job_id]
+    if(job_struct.procs_alloc!=0)
+        submit(job_struct, false)
+    end
+end
+
+sleep security_time_wait_running if(!jobs_running.empty?) # wait for everyone to be running (if any)
+
+# resume the hold jobs to be queued
+resume(jobs_queued) if(!jobs_queued.empty?)
+
+
+###submit the jobs to replay###
+threads_timeslot = []
+date = `date +%s`.chomp
+puts "#{date} -- Starting workload trace submission..." if $debug
+
+submission_hash.keys.sort.each do |subtime|
+    job_ids = submission_hash[subtime]
+    threads_timeslot << Thread.new(job_ids) { |job_ids|
+        sleep subtime
+        threads_job = []
+        job_ids.each do |job_id|
+            threads_job << Thread.new(job_id) { |job_id|
+                submit(jobs[job_id], true)
+            }
+        end
+        threads_job.each { |thread|  thread.join }
+                                            
+#         job_ids.each do |job_id|
+#             pid = fork {
+#                 submit(jobs[job_id])
+#             }
+#             Process.detach(pid)
+#         end
+    }
+end
+
+threads_timeslot.each { |thread|  thread.join }
+
+## OLD relative times version (deriv prb)
+# last_sub_time = 0
+# submission_hash.keys.sort.each do |subtime|
+#     relative_wait = subtime - last_sub_time
+#     last_sub_time = subtime
+#     submission_table_relative_times << [ relative_wait, submission_hash[subtime] ]
+# end
+# 
+# submission_table_relative_times.each do |tick|
+#                                     
+#     time_to_sleep = tick[0]
+#     sleep time_to_sleep
+#     
+#     tick[1].each do |job_id|
+#         #puts "submitting job #{job_id}"
+#         submit(jobs[job_id])
+#     end   
+#                                        
+# end
+

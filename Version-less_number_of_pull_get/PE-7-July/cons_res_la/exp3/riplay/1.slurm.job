@@ -1,0 +1,13 @@
+#!/bin/sh
+#SBATCH -J riplay_1_sleep
+#SBATCH -n 8
+#SBATCH -t 0:0:33
+#SBATCH -o ./riplay_slurm_sleep_1.out
+source /opt/intel/composer_xe_2013.0.079/bin/compilervars.sh intel64
+source /opt/intel/impi/4.0.3.008/bin64/mpivars.sh intel64
+export I_MPI_PMI_LIBRARY=/usr/local/slurm1508cf/lib/libpmi.so
+
+srun sleep 22
+sleep 1
+exit 0
+
