@@ -1,0 +1,13 @@
+[Unit]
+Description=Slurm controller daemon
+After=network.target
+ConditionPathExists=/usr/local/etc/slurm.conf
+
+[Service]
+Type=forking
+EnvironmentFile=/etc/default/slurmctld
+ExecStart=${exec_prefix}/sbin/slurmctld $SLURMCTLD_OPTIONS
+PIDFile=/var/run/slurm/slurmctld.pid
+
+[Install]
+WantedBy=multi-user.target

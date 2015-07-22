@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>ext_sensors.conf</H1>
+Section: \
+Slurm external sensors plugin configuration file (5)<BR>Updated: February 2013<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+ext_sensors.conf - Slurm configuration file for the external sensors plugin
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>ext_sensors.conf</B> is an ASCII file which defines parameters used by
+Slurm's external sensors plugins.
+The file location can be modified at system build time using the
+DEFAULT_SLURM_CONF parameter or at execution time by setting the SLURM_CONF
+environment variable. The file will always be located in the
+same directory as the <B>slurm.conf</B> file.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+The size of each line in the file is limited to 1024 characters.
+Changes to the configuration file take effect upon restart of
+SLURM daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot; unless otherwise noted.
+<P>
+<P>
+
+The following ext_sensors.conf parameters are defined to control data
+collection by the ext_sensors plugins. All of these parameters are optional.
+If a parameter is omitted, data collection of the omitted type is disabled.
+<P>
+<DL COMPACT>
+<a id="OPT_JobData"></a>
+<DT><B>JobData</B>=<B>energy</B><DD>
+Specify the data types to be collected by the plugin for jobs/steps.
+<P>
+<a id="OPT_NodeData"></a>
+<DT><B>NodeData</B>=<B>[energy|temp][,temp|energy]</B><DD>
+Specify the data types to be collected by the plugin for nodes.
+<P>
+<a id="OPT_SwitchData"></a>
+<DT><B>SwitchData</B>=<B>energy</B><DD>
+Specify the data types to be collected by the plugin for switches.
+<P>
+<a id="OPT_ColdDoorData"></a>
+<DT><B>ColdDoorData</B>=<B>temp</B><DD>
+Specify the data types to be collected by the plugin for cold doors.
+<P>
+<a id="OPT_MinWatt"></a>
+<DT><B>MinWatt</B>=<B>&lt;number&gt;</B><DD>
+Minimum recorded power consumption, in watts.
+<P>
+<a id="OPT_MaxWatt"></a>
+<DT><B>MaxWatt</B>=<B>&lt;number&gt;</B><DD>
+Maximum recorded power consumption, in watts.
+<P>
+<a id="OPT_MinTemp"></a>
+<DT><B>MinTemp</B>=<B>&lt;number&gt;</B><DD>
+Minimum recorded temperature, in celsius.
+<P>
+<a id="OPT_MaxTemp"></a>
+<DT><B>MaxTemp</B>=<B>&lt;number&gt;</B><DD>
+Maximum recorded temperature, in celsius.
+<P>
+<a id="OPT_EnergyRRA"></a>
+<DT><B>EnergyRRA</B>=<B>&lt;name&gt;</B><DD>
+Energy RRA name.
+<P>
+<a id="OPT_TempRRA"></a>
+<DT><B>TempRRA</B>=<B>&lt;name&gt;</B><DD>
+Temperature RRA name.
+<P>
+<a id="OPT_EnergyPathRRD"></a>
+<DT><B>EnergyPathRRD</B>=<B>&lt;path&gt;</B><DD>
+Pathname of energy RRD file.
+<P>
+<a id="OPT_TempPathRRD"></a>
+<DT><B>TempPathRRD</B>=<B>&lt;patch&gt;</B><DD>
+Pathname of temperature RRD file.
+<P>
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_EXAMPLE"></a>
+<H2>EXAMPLE</H2>
+
+<P>
+
+<BR>
+
+###
+<BR>
+
+# Slurm external sensors plugin configuration file
+<BR>
+
+###
+<BR>
+
+JobData=energy
+<BR>
+
+NodeData=energy,temp
+<BR>
+
+SwitchData=energy
+<BR>
+
+ColdDoorData=temp
+<BR>
+
+#
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2013 Bull
+<P>
+
+This file is part of SLURM, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:33 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>

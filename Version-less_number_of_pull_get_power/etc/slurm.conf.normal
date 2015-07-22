@@ -1,0 +1,155 @@
+# (nodes_nb)*(proc_per_node+1)
+
+ClusterName=pcap
+
+ControlMachine=mo37
+#BackupController=lascaux0
+
+FirstJobId=3000
+
+SlurmdUser=root
+SlurmctldPort=7817
+SlurmdPort=7818
+SlurmctldPidFile=/usr/local/slurm-layouts-pcap/var/run/slurmctld.pid
+SlurmdPidFile=/usr/local/slurm-layouts-pcap/var/run/slurmd-%n.pid
+
+PriorityType=priority/multifactor
+PriorityDecayHalfLife=0
+PriorityCalcPeriod=5
+PriorityUsageResetPeriod=MONTHLY
+PriorityFavorSmall=NO
+PriorityMaxAge=7-0
+PriorityWeightAge=1000
+PriorityWeightFairshare=100000
+PreemptMode=REQUEUE
+PreemptType=preempt/qos
+
+AuthType=auth/munge
+
+StateSaveLocation=/tmp
+SlurmdSpoolDir=/tmp/slurm-%n
+
+
+SwitchType=switch/none
+MpiDefault=none
+#ProctrackType=proctrack/linuxproc
+ProctrackType=proctrack/cgroup
+
+CacheGroups=0
+ReturnToService=0
+PropagateResourceLimits=MEMLOCK,NOFILE,FSIZE,STACK
+
+SlurmctldTimeout=300
+SlurmdTimeout=300
+MessageTimeout=60
+InactiveLimit=0
+MinJobAge=2
+MaxJobCount=200000
+KillWait=300
+KillOnBadExit=1
+Waittime=600
+
+OverTimeLimit=3
+
+#
+# Epilog
+#
+#Epilog=/etc/slurm/slurm.epilog.sh
+
+#
+# SCHEDULING
+#
+#TopologyPlugin=topology/tree
+SchedulerType=sched/backfill
+#SchedulerParameters=defer
+SelectType=select/cons_res
+# Allocate nodes based on core resources
+# Allocate cores on nodes using a block distribution by default (fill sockets)
+# Do not treat hyperthreads as cores by default
+SelectTypeParameters=CR_Core_Memory,CR_CORE_DEFAULT_DIST_BLOCK,CR_ONE_TASK_PER_CORE
+#DefMemPerCPU=2000
+#MaxMemPerCPU=2000
+#Licenses=lsdyna*53,abaqus*57,fluent*5,fluent-par*75
+
+#
+# TASKS BINDING
+TaskPlugin=task/cgroup
+#TaskPluginParam=Cpusets,Cores
+
+#
+# LOGGING
+#
+SlurmctldDebug=9
+SlurmctldLogFile=/tmp/slurmctld.log
+SlurmdDebug=9
+SlurmdLogFile=/tmp/slurmd-%n.log
+
+Layouts=power
+
+#
+# Health checking
+#
+
+#
+# Accounting
+#
+JobCompType=jobcomp/none
+JobAcctGatherType=jobacct_gather/linux
+JobAcctGatherFrequency=30
+#AcctGatherEnergyType=acct_gather_energy/rapl
+#AcctGatherNodeFreq=5
+
+AccountingStorageEnforce=all
+AccountingStorageHost=localhost
+#AccountingStorageBackupHost=lascaux0
+AccountingStoragePort=6819
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageUser=root
+
+# on ne veut pas que les jobs soient reexecutes automatiquement
+# en cas de probleme sur un noeud
+JobRequeue=0
+
+#
+# COMPUTE NODES
+#
+# required to ensure that node description is not override by system guesses
+# SMT would double the number of cores...
+FastSchedule=2
+
+
+# Optimisation
+# il faudrait aussi selon la doc
+# echo 8192 > /proc/sys/net/core/somaxconn
+# echo 16384 > /proc/sys/net/ipv4/tcp_max_syn_backlog
+# ifconfig eth0 txqueuelen 8192
+
+
+# test ESP
+#
+# Multifactor priority configuration
+#
+# on a 604800 en 7 jours, on ramene cela sur 10000
+# slots, 1 slot represente donc a peu pres 60 secondes
+# les jobs soumis dans la meme minute auront donc les
+# meme poids pour le facteur Age, pour etre a la seconde
+# pres, il faudrait se place sur 604800
+# au bout de 7 jours d'attente, tous les jobs atteignent
+# le poid maximum pour le facteur Age, on se retrouve
+# alors en first-fit parmi ces jobsi
+#PowerCap=INFINITE
+
+
+# Noeuds de service
+#NodeName=nazgul NodeAddr=127.0.0.1 Sockets=1 CoresPerSocket=4 ThreadsPerCore=1 RealMemory=3000 Weight=1 State=UNKNOWN
+#PartitionName=test Nodes=nazgul State=UP Priority=1000 MaxTime=Unlimited Default=YES
+
+PartitionName=exclusive Nodes=mo[40-41] Default=YES MaxTime=INFINITE State=UP Priority=10 Shared=EXCLUSIVE
+PartitionName=shared Nodes=mo[40-41] MaxTime=INFINITE State=UP Priority=30
+
+NodeName=DEFAULT Sockets=2 CoresPerSocket=8 ThreadsPerCore=1 RealMemory=384 State=IDLE 
+#PowerCapIdleWatts=103 PowerCapMaxWatts=308 PowerCapPriority=1 PowerCapCpufreq12Watts=172 PowerCapCpufreq14Watts=187 PowerCapCpufreq16Watts=203 PowerCapCpufreq18Watts=226 PowerCapCpufreq20Watts=252 PowerCapCpufreq22Watts=273 PowerCapCpufreq24Watts=293
+
+
+NodeName=mo[40-41]
+

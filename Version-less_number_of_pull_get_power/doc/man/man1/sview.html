@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>sview</H1>
+Section: SLURM Commands (1)<BR>Updated: SLURM 2.6<BR><A HREF="#index">Index</A>
+
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+<P>
+
+sview - graphical user interface to view and modify SLURM state.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_SYNOPSIS"></a>
+<H2>SYNOPSIS</H2>
+
+<P>
+
+sview
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<P>
+
+sview can be used to view SLURM configuration, job,
+step, node and partitions state information.
+Authorized users can also modify select information.
+<P>
+
+The primary display modes are <I>Jobs</I> and <I>Partitions</I>, each with a selection tab.
+There is also an optional map of the nodes on the left side of the window which
+will show the nodes associated with each job or partition.
+Left-click on the tab of the display you would like to see.
+Right-click on the tab in order to control which fields will be displayed.
+<P>
+
+Within the display window, left-click on the header to control the sort
+order of entries (e.g. increasing or decreasing) in the display.
+You can also left-click and drag the headers to move them right or left in the display.
+If a JobID has an arrow next to it, click on that arrow to display or hide
+information about that job's steps.
+Right-click on a line of the display to get more information about the record.
+<P>
+
+There is an <I>Admin Mode</I> option which permits the user root to modify many of
+the fields displayed, such as node state or job time limit.
+In the mode, a <I>SLURM Reconfigure</I> Action is also available.
+It is recommended that <I>Admin Mode</I> be used only while modifications are
+actively being made.
+Disable <I>Admin Mode</I> immediately after the changes to avoid possibly making
+unintended changes.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_NOTES"></a>
+<H2>NOTES</H2>
+
+The sview command can only be build if <I>gtk+-2.0</I> is installed.
+Systems lacking these libraries will have SLURM installed without
+the sview command.
+<P>
+At least some gtk themes are unable to display large numbers of lines (jobs,
+nodes, etc). The information is still in gtk's internal data structures, but
+not visible by scrolling down the window.
+The gtk2-engines-qtcurve theme does seem to have particularly good
+scalability.
+<P>
+On systems with the topology/tree plugin configured, the sview command will
+attempt to display the nodes on each switch on a separate line.
+Change the sview configuration for optimal viewing by selecting &quot;Options&quot; then
+&quot;Set Default Settings&quot;.
+The &quot;Nodes in Row&quot; and &quot;Node Button Size in Pixels&quot; would be the mostly
+commonly changed options.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2006-2007 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2008-2011 Lawrence Livermore National Security.
+<BR>
+
+Copyright (C) 2010-2013 SchedMD LLC.
+<P>
+
+This file is part of SLURM, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAG">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<B><A HREF="sinfo.html">sinfo</A></B>(1), <B><A HREF="squeue.html">squeue</A></B>(1), <B><A HREF="scontrol.html">scontrol</A></B>(1), <B><A HREF="slurm.conf.html">slurm.conf</A></B>(5),
+<B>sched_setaffinity</B> (2), <B>numa</B> (3)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">NOTES</A><DD>
+<DT><A HREF="#lbAF">COPYING</A><DD>
+<DT><A HREF="#lbAG">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:33 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>

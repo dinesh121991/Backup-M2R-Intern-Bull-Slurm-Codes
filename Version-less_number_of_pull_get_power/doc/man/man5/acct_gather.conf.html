@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>acct_gather.conf</H1>
+Section: Slurm acct_gather.configuration file (5)<BR>Updated: May 2013<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+acct_gather.conf - Slurm configuration file for the acct_gather plugins
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<P>
+<B>acct_gather.conf</B> is an ASCII file which defines parameters used by
+Slurm's acct_gather related plugins.
+The file location can be modified at system build time using the
+DEFAULT_SLURM_CONF parameter or at execution time by setting the SLURM_CONF
+environment variable. The file will always be located in the
+same directory as the <B>slurm.conf</B> file.
+<P>
+
+Parameter names are case insensitive.
+Any text following a &quot;#&quot; in the configuration file is treated
+as a comment through the end of that line.
+The size of each line in the file is limited to 1024 characters.
+Changes to the configuration file take effect upon restart of
+SLURM daemons, daemon receipt of the SIGHUP signal, or execution
+of the command &quot;scontrol reconfigure&quot; unless otherwise noted.
+<P>
+<P>
+
+The following acct_gather.conf parameters are defined to control the general
+behavior of various plugins in SLURM.
+<P>
+<P>
+
+The acct_gather.conf file is different than other Slurm .conf files.  Each
+plugin defines which options are available.  So if you do not load the
+respective plugin for an option that option will appear to be unknown by Slurm
+and could cause Slurm not to load.  If you decide to change plugin types you
+might also have to change the related options as well.
+<P>
+<DL COMPACT>
+<a id="OPT_EnergyIPMI"></a>
+<DT><B>EnergyIPMI</B><DD>
+Options used for AcctGatherEnergyType/ipmi are as follows:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_EnergyIPMIFrequency"></a>
+<DT><B>EnergyIPMIFrequency</B>=&lt;number&gt;<DD>
+This parameter is the number of seconds between BMC access samples.
+<P>
+<a id="OPT_EnergyIPMICalcAdjustment"></a>
+<DT><B>EnergyIPMICalcAdjustment</B>=&lt;yes|no&gt;<DD>
+If set to &quot;yes&quot;, the consumption between the last BMC access sample and
+a step consumption update is approximated to get more accurate task consumption.
+The adjustment is made at the step start and each time the
+consumption is updated, including the step end. The approximations are not
+accumulated, only the first and last adjustments are used to calculated the
+consumption. The default is &quot;no&quot;.
+<P>
+<a id="OPT_EnergyIPMIPowerSensor"></a>
+<DT><B>EnergyIPMIPowerSensor</B>=&lt;number&gt;<DD>
+This parameter is optional.  If the parameter is included, the plugin searches
+the node for a &quot;watt&quot; sensor with the number specified by &lt;number&gt;. If a
+matching sensor is found, that sensor is used for power data. If no matching
+sensor is found, a value of zero is returned for power data. If the parameter
+is omitted, the plugin will use the first &quot;watt&quot; sensor it finds.
+<P>
+</DL>
+<P>
+
+The following acct_gather.conf parameters are defined to control the
+IPMI config default values for libipmiconsole.
+<P>
+<DL COMPACT>
+<a id="OPT_EnergyIPMIUsername"></a>
+<DT><B>EnergyIPMIUsername</B>=<I>USERNAME</I><DD>
+Specify BMC Username.
+<P>
+<a id="OPT_EnergyIPMIPassword"></a>
+<DT><B>EnergyIPMIPassword</B>=<I>PASSWORD</I><DD>
+Specify BMC Password.
+</DL>
+</DL>
+
+<P>
+<a id="OPT_ProfileHDF5"></a>
+<DT><B>ProfileHDF5</B><DD>
+Options used for AcctGatherProfileType/hdf5 are as follows:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_ProfileHDF5Dir"></a>
+<DT><B>ProfileHDF5Dir</B>=&lt;path&gt;<DD>
+This parameter is the path to the shared folder into which the
+acct_gather_profile plugin will write detailed data (usually as an HDF5 file).
+The directory is assumed to be on a file system shared by the controller and
+all compute nodes. This is a required parameter.
+<P>
+<a id="OPT_ProfileHDF5Default"></a>
+<DT><B>ProfileHDF5Default</B><DD>
+A comma delimited list of data types to be collected for each job submission.
+Allowed values are:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_All"></a>
+<DT><B>All</B><DD>
+All data types are collected. (Cannot be combined with other values.)
+<P>
+<a id="OPT_None"></a>
+<DT><B>None</B><DD>
+No data types are collected. This is the default.
+(Cannot be combined with other values.)
+<P>
+<a id="OPT_Energy"></a>
+<DT><B>Energy</B><DD>
+Energy data is collected.
+<P>
+<a id="OPT_Filesystem"></a>
+<DT><B>Filesystem</B><DD>
+File system (Lustre) data is collected.
+<P>
+<a id="OPT_Network"></a>
+<DT><B>Network</B><DD>
+Network (InfiniBand) data is collected.
+<P>
+<a id="OPT_Task"></a>
+<DT><B>Task</B><DD>
+Task (I/O, Memory, ...) data is collected.
+<P>
+</DL>
+</DL>
+
+</DL>
+</DL>
+
+<P>
+<a id="OPT_InfinibandOFED"></a>
+<DT><B>InfinibandOFED</B><DD>
+Options used for AcctGatherInfinbandType/ofed are as follows:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_InfinibandOFEDPort"></a>
+<DT><B>InfinibandOFEDPort</B>=&lt;number&gt;<DD>
+This parameter represents the port number of the local Infiniband card that we are willing to monitor.
+The default port is 1.
+</DL>
+</DL>
+
+
+</DL>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_EXAMPLE"></a>
+<H2>EXAMPLE</H2>
+
+<P>
+
+<BR>
+
+###
+<BR>
+
+# Slurm acct_gather configuration file
+<BR>
+
+###
+<BR>
+
+# Parameters for AcctGatherEnergy/impi plugin
+<BR>
+
+EnergyIPMIFrequency=10
+<BR>
+
+EnergyIPMICalcAdjustment=yes
+<BR>
+
+#
+<BR>
+
+# Parameters for AcctGatherProfileType/hdf5 plugin
+<BR>
+
+ProfileHDF5Dir=/app/slurm/profile_data
+<BR>
+
+# Parameters for AcctGatherInfiniband/ofed plugin
+<BR>
+
+InfinibandOFEDPort=1
+<BR>
+
+<P>
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2012-2013 Bull.
+Produced at Bull (cf, DISCLAIMER).
+<P>
+
+This file is part of SLURM, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<P>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<P>
+
+<B><A HREF="slurm.conf.html">slurm.conf</A></B>(5)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAD">EXAMPLE</A><DD>
+<DT><A HREF="#lbAE">COPYING</A><DD>
+<DT><A HREF="#lbAF">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:33 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>

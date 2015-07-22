@@ -1,0 +1,11 @@
+#!/bin/sh
+#SBATCH -J riplay_53_sleep
+#SBATCH -n 23
+#SBATCH -t 0:1:1
+#SBATCH -o ./riplay_slurm_sleep_53.out
+
+srun sleep 41
+srun /bin/hostname
+sleep 1
+exit 0
+

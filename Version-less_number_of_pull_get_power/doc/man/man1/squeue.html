@@ -1,0 +1,1491 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                        "http://www.w3.org/TR/REC-html40/loose.dtd">
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="keywords" content="Simple Linux Utility for Resource Management, SLURM, resource management,
+Linux clusters, high-performance computing">
+<meta name="description" content="Simple Linux Utility for Resource Management">
+<title>Simple Linux Utility for Resource Management</title>
+<link href="linuxstyles.css" rel="stylesheet" type="text/css">
+<link href="slurmstyles.css" rel="stylesheet" type="text/css">
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});
+  google.setOnLoadCallback(function() {
+    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(
+      '011890816164765777536:jvrtxrd3f0w', customSearchOptions);
+    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);
+    customSearchControl.draw('cse');
+  }, true);
+
+function window_check ()
+{
+	obj = document.getElementById('navigation');
+	if ((window.innerWidth>=800) && (window.innerHeight>=700) &&
+	    (screen.width>=800) && (screen.height>=700)) {
+	   obj.style.position = 'fixed';
+	} else {
+	   obj.style.position = 'absolute';
+	}
+}
+
+window.onload = window_check;
+window.onresize = window_check;
+
+</script>
+
+</head>
+
+<body><div id="container"><div id="row">
+
+<div id="navigation">
+<a href="slurm.html"><img class="displayed" src="slurm_logo.png" width="130" usemap="#Map"></a>
+
+<div id="version">Version 15.08</div>
+<p></p>
+<div id="slurmh2">About</div>
+<ul>
+	  <li><a href="overview.html" class="nav">Overview</a></li>
+	  <li><a href="news.html" class="nav">What's New</a></li>
+	  <li><a href="team.html" class="nav">Slurm Team</a></li>
+	  <li><a href="meetings.html" class="nav">Meetings</a></li>
+	  <li><a href="testimonials.html" class="nav">Testimonials</a></li>
+	  <li><a href="disclaimer.html" class="nav">Legal Notices</a></li>
+</ul>
+<div id="slurmh2">Using</div>
+<ul>
+	  <li><a href="tutorials.html" class="nav">Tutorials</a></li>
+	  <li><a href="documentation.html" class="nav">Documentation</a></li>
+	  <li><a href="faq.html" class="nav">FAQ</a></li>
+	  <li><a href="publications.html" class="nav">Publications</a></li>
+</ul>
+<div id="slurmh2">Installing</div>
+<ul>
+	  <li><a href="download.html" class="nav">Download</a></li>
+	  <li><a href="quickstart_admin.html" class="nav">Installation Guide</a></li>
+</ul>
+<div id="slurmh2">Getting Help</div>
+<ul>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Support</a></li>
+	  <li><a href="mail.html" class="nav">Mailing Lists</a></li>
+	  <li><a href="http://www.schedmd.com/#services" class="nav">Training</a></li>
+	  <li><a href="troubleshoot.html" class="nav">Troubleshooting</a></li>
+</ul>
+<a href="http://www.schedmd.com"><img class="displayed" src="schedmd.png" width="130" usemap="#Map"></a>
+</div>
+
+<div id="content">
+
+<div id="cse"></div>
+
+<H1>SQUEUE</H1>
+Section: Slurm components (1)<BR>Updated: August 2014<BR><A HREF="#index">Index</A>
+
+<P>
+<A NAME="lbAB">&nbsp;</A>
+<a id="SECTION_NAME"></a>
+<H2>NAME</H2>
+
+squeue - view information about jobs located in the SLURM scheduling queue.
+<P>
+<A NAME="lbAC">&nbsp;</A>
+<a id="SECTION_SYNOPSIS"></a>
+<H2>SYNOPSIS</H2>
+
+<B>squeue</B> [<I>OPTIONS</I>...]
+<P>
+<A NAME="lbAD">&nbsp;</A>
+<a id="SECTION_DESCRIPTION"></a>
+<H2>DESCRIPTION</H2>
+
+<B>squeue</B> is used to view job and job step information for jobs managed by
+SLURM.
+<P>
+<A NAME="lbAE">&nbsp;</A>
+<a id="SECTION_OPTIONS"></a>
+<H2>OPTIONS</H2>
+
+<P>
+<DL COMPACT>
+<a id="OPT_account=&lt;account_list&gt;"></a>
+<DT><B>-A &lt;account_list&gt;</B>, <B>--account=&lt;account_list&gt;</B><DD>
+Specify the accounts of the jobs to view. Accepts a comma separated
+list of account names. This has no effect when listing job steps.
+<P>
+<a id="OPT_all"></a>
+<DT><B>-a</B>, <B>--all</B><DD>
+Display information about jobs and job steps in all partitions.
+This causes information to be displayed about partitions that are configured as
+hidden and partitions that are unavailable to user's group.
+<P>
+<a id="OPT_array"></a>
+<DT><B>-r</B>, <B>--array</B><DD>
+Display one job array element per line.
+Without this option, the display will be optimized for use with job arrays
+(pending job array elements will be combined on one line of output with the
+array index values printed using a regular expression).
+<P>
+<a id="OPT_noheader"></a>
+<DT><B>-h</B>, <B>--noheader</B><DD>
+Do not print a header on the output.
+<P>
+<a id="OPT_help"></a>
+<DT><B>--help</B><DD>
+Print a help message describing all options <B>squeue</B>.
+<P>
+<a id="OPT_hide"></a>
+<DT><B>--hide</B><DD>
+Do not display information about jobs and job steps in all partitions. By default,
+information about partitions that are configured as hidden or are not available
+to the user's group will not be displayed (i.e. this is the default behavior).
+<P>
+<a id="OPT_iterate=&lt;seconds&gt;"></a>
+<DT><B>-i &lt;seconds&gt;</B>, <B>--iterate=&lt;seconds&gt;</B><DD>
+Repeatedly gather and report the requested information at the interval
+specified (in seconds).
+By default, prints a time stamp with the header.
+<P>
+<a id="OPT_jobs=&lt;job_id_list&gt;"></a>
+<DT><B>-j &lt;job_id_list&gt;</B>, <B>--jobs=&lt;job_id_list&gt;</B><DD>
+Requests a comma separated list of job IDs to display.  Defaults to all jobs.
+The <B>--jobs=&lt;job_id_list&gt;</B> option may be used in conjunction with the
+<B>--steps</B> option to print step information about specific jobs.
+Note: If a list of job IDs is provided, the jobs are displayed even if
+they are on hidden partitions. Since this option's argument is optional,
+for proper parsing the single letter option must be followed immediately
+with the value and not include a space between them. For example &quot;-j1008&quot;
+and not &quot;-j 1008&quot;.
+The job ID format is &quot;job_id[_array_id]&quot;.
+Performance of the command can be measurably improved for systems with large
+numbers of jobs when a single job ID is specified.
+By default, this field size will be limited to 64 bytes.
+Use the environment variable SLURM_BITSTR_LEN to specify larger field sizes.
+<P>
+<P>
+<a id="OPT_long"></a>
+<DT><B>-l</B>, <B>--long</B><DD>
+Report more of the available information for the selected jobs or job steps,
+subject to any constraints specified.
+<P>
+<a id="OPT_licenses=&lt;license_list&gt;"></a>
+<DT><B>-L</B>, <B>--licenses=&lt;license_list&gt;</B><DD>
+Request jobs requesting or using one or more of the named licenses.
+The license list consists of a comma separated list of license names.
+<P>
+<a id="OPT_clusters"></a>
+<DT><B>-M</B>, <B>--clusters</B>=&lt;<I>string</I>&gt;<DD>
+Clusters to issue commands to.  Multiple cluster names may be comma separated.
+A value of of '<I>all</I>' will query to run on all clusters.
+<P>
+<a id="OPT_name=&lt;name_list&gt;"></a>
+<DT><B>-n</B>, <B>--name=&lt;name_list&gt;</B><DD>
+Request jobs or job steps having one of the specified names.  The
+list consists of a comma separated list of job names.
+<P>
+<a id="OPT_format=&lt;output_format&gt;"></a>
+<DT><B>-o &lt;output_format&gt;</B>, <B>--format=&lt;output_format&gt;</B><DD>
+Specify the information to be displayed, its size and position
+(right or left justified).
+Also see the <B>-O &lt;output_format&gt;</B>, <B>--Format=&lt;output_format&gt;</B>
+option described below (which supports less flexibility in formatting, but
+supports access to all fields).
+The default formats with various options are
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>default</I><DD>
+&quot;%.18i %.9P %.8j %.8u %.2t %.10M %.6D %R&quot;
+<DT><I>-l, --long</I><DD>
+&quot;%.18i %.9P %.8j %.8u %.8T %.10M %.9l %.6D %R&quot;
+<DT><I>-s, --steps</I><DD>
+&quot;%.15i %.8j %.9P %.8u %.9M %N&quot;
+</DL>
+</DL>
+
+<P>
+<DT><DD>
+The format of each field is &quot;%[[.]size]type&quot;.
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>size</I><DD>
+is the minimum field size.
+If no size is specified, whatever is needed to print the information will be used.
+<DT><I> .</I><DD>
+indicates the output should be right justified and size must be specified.
+By default, output is left justified.
+</DL>
+</DL>
+
+<P>
+<DT><DD>
+Note that many of these <I>type</I> specifications are valid
+only for jobs while others are valid only for job steps.
+Valid <I>type</I> specifications include:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_%all"></a>
+<DT><B>%all</B><DD>
+Print all fields available for this data type with a vertical bar separating
+each field.
+<a id="OPT_%a"></a>
+<DT><B>%a</B><DD>
+Account associated with the job.
+(Valid for jobs only)
+<a id="OPT_%A"></a>
+<DT><B>%A</B><DD>
+Number of tasks created by a job step.
+This reports the value of the <B>srun --ntasks</B> option.
+(Valid for job steps only)
+<a id="OPT_%A"></a>
+<DT><B>%A</B><DD>
+Job id.
+This will have a unique value for each element of job arrays.
+(Valid for jobs only)
+<a id="OPT_%b"></a>
+<DT><B>%b</B><DD>
+Generic resources (gres) required by the job or step.
+(Valid for jobs and job steps)
+<a id="OPT_%B"></a>
+<DT><B>%B</B><DD>
+Executing (batch) host. For an allocated session, this is the host on which
+the session is executing (i.e. the node from which the the <B>srun</B> or the
+<B>salloc</B> command was executed). For a batch job, this is the node executing
+the batch script. In the case of a typical Linux cluster, this would be the
+compute node zero of the allocation. In the case of a BlueGene or a Cray
+system, this would be the front-end host whose slurmd daemon executes the job
+script.
+<a id="OPT_%c"></a>
+<DT><B>%c</B><DD>
+Minimum number of CPUs (processors) per node requested by the job.
+This reports the value of the <B>srun --mincpus</B> option with a
+default value of zero.
+(Valid for jobs only)
+<a id="OPT_%C"></a>
+<DT><B>%C</B><DD>
+Number of CPUs (processors) requested by the job or allocated to
+it if already running.  As a job is completing this number will
+reflect the current number of CPUs allocated.
+(Valid for jobs only)
+<a id="OPT_%d"></a>
+<DT><B>%d</B><DD>
+Minimum size of temporary disk space (in MB) requested by the job.
+(Valid for jobs only)
+<a id="OPT_%D"></a>
+<DT><B>%D</B><DD>
+Number of nodes allocated to the job or the minimum number of nodes
+required by a pending job. The actual number of nodes allocated to a pending
+job may exceed this number if the job specified a node range count (e.g.
+minimum and maximum node counts) or the the job specifies a processor
+count instead of a node count and the cluster contains nodes with varying
+processor counts. As a job is completing this number will reflect the
+current number of nodes allocated.
+(Valid for jobs only)
+<a id="OPT_%e"></a>
+<DT><B>%e</B><DD>
+Time at which the job ended or is expected to end (based upon its time limit).
+(Valid for jobs only)
+<a id="OPT_%E"></a>
+<DT><B>%E</B><DD>
+Job dependency. This job will not begin execution until the dependent job
+completes.  A value of zero implies this job has no dependencies.
+(Valid for jobs only)
+<a id="OPT_%f"></a>
+<DT><B>%f</B><DD>
+Features required by the job.
+(Valid for jobs only)
+<a id="OPT_%F"></a>
+<DT><B>%F</B><DD>
+Job array's job ID. This is the base job ID.
+For non-array jobs, this is the job ID.
+(Valid for jobs only)
+<a id="OPT_%g"></a>
+<DT><B>%g</B><DD>
+Group name of the job.
+(Valid for jobs only)
+<a id="OPT_%G"></a>
+<DT><B>%G</B><DD>
+Group ID of the job.
+(Valid for jobs only)
+<a id="OPT_%h"></a>
+<DT><B>%h</B><DD>
+Can the resources allocated to the job be shared with other jobs.
+The resources to be shared can be nodes, sockets, cores, or hyperthreads
+depending upon configuration.
+The value will be &quot;yes&quot; if the job was submitted with the shared option or
+the partition is configured with Shared=Force,
+&quot;no&quot; if the job requires exclusive node access, and
+&quot;unknwn&quot; otherwise (typically allocated dedicated CPUs).
+(Valid for jobs only)
+<a id="OPT_%H"></a>
+<DT><B>%H</B><DD>
+Number of sockets per node requested by the job.
+This reports the value of the <B>srun --sockets-per-node</B> option.
+When --sockets-per-node has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_%i"></a>
+<DT><B>%i</B><DD>
+Job or job step id.
+In the case of job arrays, the job ID format will be of the form
+&quot;&lt;base_job_id&gt;_&lt;index&gt;&quot;.
+By default, the job array index field size will be limited to 64 bytes.
+Use the environment variable SLURM_BITSTR_LEN to specify larger field sizes.
+(Valid for jobs and job steps)
+<a id="OPT_%I"></a>
+<DT><B>%I</B><DD>
+Number of cores per socket requested by the job.
+This reports the value of the <B>srun --cores-per-socket</B> option.
+When --cores-per-socket has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_%j"></a>
+<DT><B>%j</B><DD>
+Job or job step name.
+(Valid for jobs and job steps)
+<a id="OPT_%J"></a>
+<DT><B>%J</B><DD>
+Number of threads per core requested by the job.
+This reports the value of the <B>srun --threads-per-core</B> option.
+When --threads-per-core has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_%k"></a>
+<DT><B>%k</B><DD>
+Comment associated with the job.
+(Valid for jobs only)
+<a id="OPT_%K"></a>
+<DT><B>%K</B><DD>
+Job array index.
+By default, this field size will be limited to 64 bytes.
+Use the environment variable SLURM_BITSTR_LEN to specify larger field sizes.
+(Valid for jobs only)
+<a id="OPT_%l"></a>
+<DT><B>%l</B><DD>
+Time limit of the job or job step in days-hours:minutes:seconds.
+The value may be &quot;NOT_SET&quot; if not yet established or &quot;UNLIMITED&quot; for no limit.
+(Valid for jobs and job steps)
+<a id="OPT_%L"></a>
+<DT><B>%L</B><DD>
+Time left for the job to execute in days-hours:minutes:seconds.
+This value is calculated by subtracting the job's time used from its time
+limit.
+The value may be &quot;NOT_SET&quot; if not yet established or &quot;UNLIMITED&quot; for no limit.
+(Valid for jobs only)
+<a id="OPT_%m"></a>
+<DT><B>%m</B><DD>
+Minimum size of memory (in MB) requested by the job.
+(Valid for jobs only)
+<a id="OPT_%M"></a>
+<DT><B>%M</B><DD>
+Time used by the job or job step in days-hours:minutes:seconds.
+The days and hours are printed only as needed.
+For job steps this field shows the elapsed time since execution began
+and thus will be inaccurate for job steps which have been suspended.
+Clock skew between nodes in the cluster will cause the time to be inaccurate.
+If the time is obviously wrong (e.g. negative), it displays as &quot;INVALID&quot;.
+(Valid for jobs and job steps)
+<a id="OPT_%n"></a>
+<DT><B>%n</B><DD>
+List of node names (or base partitions on BlueGene systems) explicitly
+requested by the job.
+(Valid for jobs only)
+<a id="OPT_%N"></a>
+<DT><B>%N</B><DD>
+List of nodes allocated to the job or job step. In the case of a
+<I>COMPLETING</I> job, the list of nodes will comprise only those
+nodes that have not yet been returned to service.
+(Valid for jobs and job steps)
+<a id="OPT_%o"></a>
+<DT><B>%o</B><DD>
+The command to be executed.
+<a id="OPT_%O"></a>
+<DT><B>%O</B><DD>
+Are contiguous nodes requested by the job.
+(Valid for jobs only)
+<a id="OPT_%p"></a>
+<DT><B>%p</B><DD>
+Priority of the job (converted to a floating point number between 0.0 and 1.0).
+Also see <B>%Q</B>.
+(Valid for jobs only)
+<a id="OPT_%P"></a>
+<DT><B>%P</B><DD>
+Partition of the job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_%q"></a>
+<DT><B>%q</B><DD>
+Quality of service associated with the job.
+(Valid for jobs only)
+<a id="OPT_%Q"></a>
+<DT><B>%Q</B><DD>
+Priority of the job (generally a very large unsigned integer).
+Also see <B>%p</B>.
+(Valid for jobs only)
+<a id="OPT_%r"></a>
+<DT><B>%r</B><DD>
+The reason a job is in its current state.
+See the <B>JOB REASON CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_%R"></a>
+<DT><B>%R</B><DD>
+For pending jobs: the reason a job is waiting for execution
+is printed within parenthesis.
+For terminated jobs with failure: an explanation as to why the
+job failed is printed within parenthesis.
+For all other job states: the list of allocate nodes.
+See the <B>JOB REASON CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_%s"></a>
+<DT><B>%s</B><DD>
+Node selection plugin specific data for a job. Possible data includes:
+Geometry requirement of resource allocation (X,Y,Z dimensions),
+Connection type (TORUS, MESH, or NAV == torus else mesh),
+Permit rotation of geometry (yes or no),
+Node use (VIRTUAL or COPROCESSOR), etc.
+(Valid for jobs only)
+<a id="OPT_%S"></a>
+<DT><B>%S</B><DD>
+Actual or expected start time of the job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_%t"></a>
+<DT><B>%t</B><DD>
+Job state, compact form:
+PD (pending), R (running), CA (cancelled), CF(configuring),
+CG (completing), CD (completed),
+F (failed), TO (timeout), NF (node failure) and SE (special exit state).
+See the <B>JOB STATE CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_%T"></a>
+<DT><B>%T</B><DD>
+Job state, extended form:
+PENDING, RUNNING, SUSPENDED, CANCELLED, COMPLETING, COMPLETED, CONFIGURING,
+FAILED, TIMEOUT, PREEMPTED, NODE_FAIL and SPECIAL_EXIT.
+See the <B>JOB STATE CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_%u"></a>
+<DT><B>%u</B><DD>
+User name for a job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_%U"></a>
+<DT><B>%U</B><DD>
+User ID for a job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_%v"></a>
+<DT><B>%v</B><DD>
+Reservation for the job.
+(Valid for jobs only)
+<a id="OPT_%V"></a>
+<DT><B>%V</B><DD>
+The job's submission time.
+<a id="OPT_%w"></a>
+<DT><B>%w</B><DD>
+Workload Characterization Key (wckey).
+(Valid for jobs only)
+<a id="OPT_%W"></a>
+<DT><B>%W</B><DD>
+Licenses reserved for the job.
+(Valid for jobs only)
+<a id="OPT_%x"></a>
+<DT><B>%x</B><DD>
+List of node names explicitly excluded by the job.
+(Valid for jobs only)
+<a id="OPT_%X"></a>
+<DT><B>%X</B><DD>
+Count of cores reserved on each node for system use (core specialization).
+(Valid for jobs only)
+<a id="OPT_%y"></a>
+<DT><B>%y</B><DD>
+Nice value (adjustment to a job's scheduling priority).
+(Valid for jobs only)
+<DT>%Y<DD>
+For pending jobs, a list of the nodes expected to be used when the job is
+started.
+<a id="OPT_%z"></a>
+<DT><B>%z</B><DD>
+Number of requested sockets, cores, and threads (S:C:T) per node for the job.
+When (S:C:T) has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_%Z"></a>
+<DT><B>%Z</B><DD>
+The job's working directory.
+</DL>
+</DL>
+
+<P>
+<P>
+<a id="OPT_Format=&lt;output_format&gt;"></a>
+<DT><B>-O &lt;output_format&gt;</B>, <B>--Format=&lt;output_format&gt;</B><DD>
+Specify the information to be displayed.
+Also see the <B>-o &lt;output_format&gt;</B>, <B>--format=&lt;output_format&gt;</B>
+option described below (which supports greater flexibility in formatting, but
+does not support access to all fields because we ran out of letters).
+Requests a comma separated list of job information to be displayed.
+<P>
+<DT><DD>
+The format of each field is &quot;type[:[.]size]&quot;
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<DT><I>size</I><DD>
+is the minimum field size.
+If no size is specified, 20 characters will be allocated to print the information.
+<DT><I> .</I><DD>
+indicates the output should be right justified and size must be specified.
+By default, output is left justified.
+</DL>
+</DL>
+
+<P>
+<DT><DD>
+Note that many of these <I>type</I> specifications are valid
+only for jobs while others are valid only for job steps.
+Valid <I>type</I> specifications include:
+<P>
+<DL COMPACT><DT><DD>
+<DL COMPACT>
+<a id="OPT_account"></a>
+<DT><B>account</B><DD>
+Print the account associated with the job.
+(Valid for jobs only)
+<a id="OPT_allocnodes"></a>
+<DT><B>allocnodes</B><DD>
+Print the nodes allocated to the job.
+(Valid for jobs only)
+<a id="OPT_allocsid"></a>
+<DT><B>allocsid</B><DD>
+Print the session ID used to submit the job.
+(Valid for jobs only)
+<a id="OPT_arrayjobid"></a>
+<DT><B>arrayjobid</B><DD>
+Prints the job ID of the job array.
+(Valid for jobs and job steps)
+<a id="OPT_arraytaskid"></a>
+<DT><B>arraytaskid</B><DD>
+Prints the task ID of the job array.
+(Valid for jobs and job steps)
+<a id="OPT_associd"></a>
+<DT><B>associd</B><DD>
+Prints the id of the job association.
+(Valid for jobs only)
+<a id="OPT_batchflag"></a>
+<DT><B>batchflag</B><DD>
+Prints whether the batch flag has been set.
+(Valid for jobs only)
+<a id="OPT_batchhost"></a>
+<DT><B>batchhost</B><DD>
+Executing (batch) host. For an allocated session, this is the host on which
+the session is executing (i.e. the node from which the the <B>srun</B> or the
+<B>salloc</B> command was executed). For a batch job, this is the node executing
+the batch script. In the case of a typical Linux cluster, this would be the
+compute node zero of the allocation. In the case of a BlueGene or a Cray/ALPS
+system, this would be the front-end host whose slurmd daemon executes the job
+script.
+(Valid for jobs only)
+<a id="OPT_boardspernode"></a>
+<DT><B>boardspernode</B><DD>
+Prints the number of boards per node allocated to the job.
+(Valid for jobs only)
+<a id="OPT_burstbuffer"></a>
+<DT><B>burstbuffer</B><DD>
+Burst Buffer specification
+(Valid for jobs only)
+<a id="OPT_chptdir"></a>
+<DT><B>chptdir</B><DD>
+Prints the directory where the job checkpoint will be written to.
+(Valid for job steps only)
+<a id="OPT_chptinter"></a>
+<DT><B>chptinter</B><DD>
+Prints the time interval of the checkpoint.
+(Valid for job steps only)
+<a id="OPT_command"></a>
+<DT><B>command</B><DD>
+The command to be executed.
+(Valid for jobs only)
+<a id="OPT_comment"></a>
+<DT><B>comment</B><DD>
+Comment associated with the job.
+(Valid for jobs only)
+<a id="OPT_contiguous"></a>
+<DT><B>contiguous</B><DD>
+Are contiguous nodes requested by the job.
+(Valid for jobs only)
+<a id="OPT_cores"></a>
+<DT><B>cores</B><DD>
+Number of cores per socket requested by the job.
+This reports the value of the <B>srun --cores-per-socket</B> option.
+When --cores-per-socket has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_corespec"></a>
+<DT><B>corespec</B><DD>
+Count of cores reserved on each node for system use (core specialization).
+(Valid for jobs only)
+<a id="OPT_cpufreq"></a>
+<DT><B>cpufreq</B><DD>
+Prints the frequency of the allocated CPUs.
+(Valid for job steps only)
+<a id="OPT_cpuspertask"></a>
+<DT><B>cpuspertask</B><DD>
+Prints the number of CPUs per tasks allocated to the job.
+(Valid for jobs only)
+<a id="OPT_dependency"></a>
+<DT><B>dependency</B><DD>
+Job dependency. This job will not begin execution until the dependent job
+completes.  A value of zero implies this job has no dependencies.
+(Valid for jobs only)
+<a id="OPT_derivedec"></a>
+<DT><B>derivedec</B><DD>
+Derived exit code for the job, which is the highest exit code of any job step.
+(Valid for jobs only)
+<a id="OPT_eligiletime"></a>
+<DT><B>eligiletime</B><DD>
+Time the job is eligible for running.
+(Valid for jobs only)
+<a id="OPT_endtime"></a>
+<DT><B>endtime</B><DD>
+The time of job termination, actual or expected.
+(Valid for jobs only)
+<a id="OPT_exit_code"></a>
+<DT><B>exit_code</B><DD>
+The exit code for the job.
+(Valid for jobs only)
+<a id="OPT_feature"></a>
+<DT><B>feature</B><DD>
+Features required by the job.
+(Valid for jobs only)
+<a id="OPT_gres"></a>
+<DT><B>gres</B><DD>
+Generic resources (gres) required by the job or step.
+(Valid for jobs and job steps)
+<a id="OPT_groupid"></a>
+<DT><B>groupid</B><DD>
+Group ID of the job.
+(Valid for jobs only)
+<a id="OPT_groupname"></a>
+<DT><B>groupname</B><DD>
+Group name of the job.
+(Valid for jobs only)
+<a id="OPT_jobarrayid"></a>
+<DT><B>jobarrayid</B><DD>
+Job array's job ID. This is the base job ID.
+For non-array jobs, this is the job ID.
+(Valid for jobs only)
+<a id="OPT_jobid"></a>
+<DT><B>jobid</B><DD>
+Job id.
+This will have a unique value for each element of job arrays.
+(Valid for jobs only)
+<a id="OPT_licenses"></a>
+<DT><B>licenses</B><DD>
+Licenses reserved for the job.
+(Valid for jobs only)
+<a id="OPT_maxcpus"></a>
+<DT><B>maxcpus</B><DD>
+Prints the max number of CPUs allocated to the job.
+(Valid for jobs only)
+<a id="OPT_maxnodes"></a>
+<DT><B>maxnodes</B><DD>
+Prints the max number of nodes allocated to the job.
+(Valid for jobs only)
+<a id="OPT_minmemory"></a>
+<DT><B>minmemory</B><DD>
+Minimum size of memory (in MB) requested by the job.
+(Valid for jobs only)
+intime
+<a id="OPT_mintime"></a>
+<DT><B>mintime</B><DD>
+Minimum time limit of the job
+(Valid for jobs only)
+<a id="OPT_mintmpdisk"></a>
+<DT><B>mintmpdisk</B><DD>
+Minimum size of temporary disk space (in MB) requested by the job.
+(Valid for jobs only)
+<a id="OPT_mincpus"></a>
+<DT><B>mincpus</B><DD>
+Minimum number of CPUs (processors) per node requested by the job.
+This reports the value of the <B>srun --mincpus</B> option with a
+default value of zero.
+(Valid for jobs only)
+<a id="OPT_name"></a>
+<DT><B>name</B><DD>
+Job or job step name.
+(Valid for jobs and job steps)
+<a id="OPT_network"></a>
+<DT><B>network</B><DD>
+The network that the job is running on.
+(Valid for jobs and job steps)
+<a id="OPT_nice"></a>
+<DT><B>nice</B><DD>
+Nice value (adjustment to a job's scheduling priority).
+(Valid for jobs only)
+<a id="OPT_nodes"></a>
+<DT><B>nodes</B><DD>
+List of nodes allocated to the job or job step. In the case of a
+<I>COMPLETING</I> job, the list of nodes will comprise only those
+nodes that have not yet been returned to service.
+(Valid job steps only)
+<a id="OPT_nodelist"></a>
+<DT><B>nodelist</B><DD>
+List of nodes allocated to the job or job step. In the case of a
+<I>COMPLETING</I> job, the list of nodes will comprise only those
+nodes that have not yet been returned to service.
+(Valid for jobs only)
+<a id="OPT_ntperboard"></a>
+<DT><B>ntperboard</B><DD>
+The number of tasks per board allocated to the job.
+(Valid for jobs only)
+<a id="OPT_ntpercore"></a>
+<DT><B>ntpercore</B><DD>
+The number of tasks per core allocated to the job.
+(Valid for jobs only)
+<a id="OPT_ntpernode"></a>
+<DT><B>ntpernode</B><DD>
+The number of task per node allocated to the job.
+(Valid for jobs only)
+<a id="OPT_ntpersocket"></a>
+<DT><B>ntpersocket</B><DD>
+The number of tasks per socket allocated to the job.
+(Valid for jobs only)
+<a id="OPT_numcpus"></a>
+<DT><B>numcpus</B><DD>
+Number of CPUs (processors) requested by the job or allocated to
+it if already running.  As a job is completing, this number will
+reflect the current number of CPUs allocated.
+(Valid for jobs and job steps)
+<a id="OPT_numnodes"></a>
+<DT><B>numnodes</B><DD>
+Number of nodes allocated to the job or the minimum number of nodes
+required by a pending job. The actual number of nodes allocated to a pending
+job may exceed this number if the job specified a node range count (e.g.
+minimum and maximum node counts) or the the job specifies a processor
+count instead of a node count and the cluster contains nodes with varying
+processor counts. As a job is completing this number will reflect the
+current number of nodes allocated.
+(Valid for jobs only)
+<a id="OPT_numtask"></a>
+<DT><B>numtask</B><DD>
+Number of tasks created by a job step.
+This reports the value of the <B>srun --ntasks</B> option.
+(Valid for job steps only)
+<a id="OPT_partition"></a>
+<DT><B>partition</B><DD>
+Partition of the job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_priority"></a>
+<DT><B>priority</B><DD>
+Priority of the job (converted to a floating point number between 0.0 and 1.0).
+Also see <B>prioritylong</B>.
+(Valid for jobs only)
+<a id="OPT_prioritylong"></a>
+<DT><B>prioritylong</B><DD>
+Priority of the job (generally a very large unsigned integer).
+Also see <B>priority</B>.
+(Valid for jobs only)
+<a id="OPT_profile"></a>
+<DT><B>profile</B><DD>
+Profile of the job.
+(Valid for jobs only)
+<a id="OPT_preemptime"></a>
+<DT><B>preemptime</B><DD>
+The preempt time for the job.
+(Valid for jobs only)
+<a id="OPT_qos"></a>
+<DT><B>qos</B><DD>
+Quality of service associated with the job.
+(Valid for jobs only)
+<a id="OPT_reason"></a>
+<DT><B>reason</B><DD>
+The reason a job is in its current state.
+See the <B>JOB REASON CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_reasonlist"></a>
+<DT><B>reasonlist</B><DD>
+For pending jobs: the reason a job is waiting for execution
+is printed within parenthesis.
+For terminated jobs with failure: an explanation as to why the
+job failed is printed within parenthesis.
+For all other job states: the list of allocate nodes.
+See the <B>JOB REASON CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_reboot"></a>
+<DT><B>reboot</B><DD>
+Indicates if the allocated nodes should be rebooted before starting the job.
+(Valid on jobs only)
+<a id="OPT_reqnodes"></a>
+<DT><B>reqnodes</B><DD>
+List of node names (or base partitions on BlueGene systems) explicitly
+requested by the job.
+(Valid for jobs only)
+<a id="OPT_reqswitch"></a>
+<DT><B>reqswitch</B><DD>
+The max number of requested switches by for the job.
+(Valid for jobs only)
+<a id="OPT_requeue"></a>
+<DT><B>requeue</B><DD>
+Prints whether the job will be requeued on failure.
+(Valid for jobs only)
+<a id="OPT_reservation"></a>
+<DT><B>reservation</B><DD>
+Reservation for the job.
+(Valid for jobs only)
+<a id="OPT_resizetime"></a>
+<DT><B>resizetime</B><DD>
+The amount of time changed for the job to run.
+(Valid for jobs only)
+<a id="OPT_restartcnt"></a>
+<DT><B>restartcnt</B><DD>
+The number of checkpoint restarts for the job.
+(Valid for jobs only)
+<a id="OPT_resvport"></a>
+<DT><B>resvport</B><DD>
+Reserved ports of the job.
+(Valid for job steps only)
+<a id="OPT_schednodes"></a>
+<DT><B>schednodes</B><DD>
+For pending jobs, a list of the nodes expected to be used when the job is
+started.
+(Valid for jobs only)
+<a id="OPT_sct"></a>
+<DT><B>sct</B><DD>
+Number of requested sockets, cores, and threads (S:C:T) per node for the job.
+When (S:C:T) has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_selectjobinfo"></a>
+<DT><B>selectjobinfo</B><DD>
+Node selection plugin specific data for a job. Possible data includes:
+Geometry requirement of resource allocation (X,Y,Z dimensions),
+Connection type (TORUS, MESH, or NAV == torus else mesh),
+Permit rotation of geometry (yes or no),
+Node use (VIRTUAL or COPROCESSOR), etc.
+(Valid for jobs only)
+<a id="OPT_shared"></a>
+<DT><B>shared</B><DD>
+Can the resources allocated to the job be shared with other jobs.
+Possible values are &quot;no&quot; (job allocated whole node only),
+&quot;yes&quot; (job can share allocated resources with other jobs), and
+&quot;unknwn&quot; (not specified by job or configuration, job will normally be allocated
+dedicated CPUs).
+<P>
+(Valid for jobs only)
+<a id="OPT_sockets"></a>
+<DT><B>sockets</B><DD>
+Number of sockets per node requested by the job.
+This reports the value of the <B>srun --sockets-per-node</B> option.
+When --sockets-per-node has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_sperboard"></a>
+<DT><B>sperboard</B><DD>
+Number of sockets per board allocated to the job.
+(Valid for jobs only)
+<a id="OPT_startime"></a>
+<DT><B>startime</B><DD>
+Actual or expected start time of the job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_state"></a>
+<DT><B>state</B><DD>
+Job state, extended form:
+PENDING, RUNNING, STOPPED, SUSPENDED, CANCELLED, COMPLETING, COMPLETED,
+CONFIGURING, FAILED, TIMEOUT, PREEMPTED, NODE_FAIL and SPECIAL_EXIT.
+See the <B>JOB STATE CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_statecompact"></a>
+<DT><B>statecompact</B><DD>
+Job state, compact form:
+PD (pending), R (running), CA (cancelled), CF(configuring),
+CG (completing), CD (completed),
+F (failed), TO (timeout), NF (node failure) and SE (special exit state).
+See the <B>JOB STATE CODES</B> section below for more information.
+(Valid for jobs only)
+<a id="OPT_stderr"></a>
+<DT><B>stderr</B><DD>
+The directory for standard error to output to.
+(Valid for jobs only)
+<a id="OPT_stdin"></a>
+<DT><B>stdin</B><DD>
+The directory for standard in.
+(Valid for jobs only)
+<a id="OPT_stdout"></a>
+<DT><B>stdout</B><DD>
+The directory for standard out to output to.
+(Valid for jobs only)
+<a id="OPT_stepid"></a>
+<DT><B>stepid</B><DD>
+Job or job step id.
+In the case of job arrays, the job ID format will be of the form
+&quot;&lt;base_job_id&gt;_&lt;index&gt;&quot;.
+(Valid forjob steps only)
+<a id="OPT_stepname"></a>
+<DT><B>stepname</B><DD>
+job step name.
+(Valid for job steps only)
+<a id="OPT_stepstate"></a>
+<DT><B>stepstate</B><DD>
+The state of the job step.
+(Valid for job steps only)
+<a id="OPT_submittime"></a>
+<DT><B>submittime</B><DD>
+The time that the job was submitted at.
+(Valid for jobs only)
+<a id="OPT_threads"></a>
+<DT><B>threads</B><DD>
+Number of threads per core requested by the job.
+This reports the value of the <B>srun --threads-per-core</B> option.
+When --threads-per-core has not been set, &quot;*&quot; is displayed.
+(Valid for jobs only)
+<a id="OPT_timeleft"></a>
+<DT><B>timeleft</B><DD>
+Time left for the job to execute in days-hours:minutes:seconds.
+This value is calculated by subtracting the job's time used from its time
+limit.
+The value may be &quot;NOT_SET&quot; if not yet established or &quot;UNLIMITED&quot; for no limit.
+(Valid for jobs only)
+<a id="OPT_timelimit"></a>
+<DT><B>timelimit</B><DD>
+Timelimit for the job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_timeused"></a>
+<DT><B>timeused</B><DD>
+Time used by the job or job step in days-hours:minutes:seconds.
+The days and hours are printed only as needed.
+For job steps this field shows the elapsed time since execution began
+and thus will be inaccurate for job steps which have been suspended.
+Clock skew between nodes in the cluster will cause the time to be inaccurate.
+If the time is obviously wrong (e.g. negative), it displays as &quot;INVALID&quot;.
+(Valid for jobs and job steps)
+<a id="OPT_userid"></a>
+<DT><B>userid</B><DD>
+User ID for a job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_username"></a>
+<DT><B>username</B><DD>
+User name for a job or job step.
+(Valid for jobs and job steps)
+<a id="OPT_wait4switch"></a>
+<DT><B>wait4switch</B><DD>
+The amount of time to wait for the desired number of switches.
+(Valid for jobs only)
+<a id="OPT_wckey"></a>
+<DT><B>wckey</B><DD>
+Workload Characterization Key (wckey).
+(Valid for jobs only)
+<a id="OPT_workdir"></a>
+<DT><B>workdir</B><DD>
+The job's working directory.
+(Valid for jobs only)
+</DL>
+</DL>
+
+<P>
+<a id="OPT_partition=&lt;part_list&gt;"></a>
+<DT><B>-p &lt;part_list&gt;</B>, <B>--partition=&lt;part_list&gt;</B><DD>
+Specify the partitions of the jobs or steps to view. Accepts a comma separated
+list of partition names.
+<P>
+<a id="OPT_priority"></a>
+<DT><B>-P</B>, <B>--priority</B><DD>
+For pending jobs submitted to multiple partitions, list the job once per
+partition. In addition, if jobs are sorted by priority, consider both the
+partition and job priority. This option can be used to produce a list of
+pending jobs in the same order considered for scheduling by Slurm with
+appropriate additional options (e.g. &quot;--sort=-p,i --states=PD&quot;).
+<P>
+<a id="OPT_qos=&lt;qos_list&gt;"></a>
+<DT><B>-q &lt;qos_list&gt;</B>, <B>--qos=&lt;qos_list&gt;</B><DD>
+Specify the qos(s) of the jobs or steps to view. Accepts a comma
+separated list of qos's.
+<P>
+<a id="OPT_reservation"></a>
+<DT><B>-R</B>, <B>--reservation</B>=<I>reservation_name</I><DD>
+Specify the reservation of the jobs to view.
+<P>
+<a id="OPT_steps"></a>
+<DT><B>-s</B>, <B>--steps</B><DD>
+Specify the job steps to view.  This flag indicates that a comma separated list
+of job steps to view follows without an equal sign (see examples).
+The job step format is &quot;job_id[_array_id].step_id&quot;. Defaults to all job
+steps. Since this option's argument is optional, for proper parsing
+the single letter option must be followed immediately with the value
+and not include a space between them. For example &quot;-s1008.0&quot; and not
+&quot;-s 1008.0&quot;.
+<P>
+<a id="OPT_sort=&lt;sort_list&gt;"></a>
+<DT><B>-S &lt;sort_list&gt;</B>, <B>--sort=&lt;sort_list&gt;</B><DD>
+Specification of the order in which records should be reported.
+This uses the same field specification as the &lt;output_format&gt;.
+Multiple sorts may be performed by listing multiple sort fields
+separated by commas.
+The field specifications may be preceded by &quot;+&quot; or &quot;-&quot; for
+ascending (default) and descending order respectively.
+For example, a sort value of &quot;P,U&quot; will sort the
+records by partition name then by user id.
+The default value of sort for jobs is &quot;P,t,-p&quot; (increasing partition
+name then within a given partition by increasing job state and then
+decreasing priority).
+The default value of sort for job steps is &quot;P,i&quot; (increasing partition
+name then within a given partition by increasing step id).
+<P>
+<a id="OPT_start"></a>
+<DT><B>--start</B><DD>
+Report the expected start time and resources to be allocated for pending jobs
+in order of increasing start time.
+This is equivalent to the following options:
+<B>--format=&quot;%.18i %.9P %.8j %.8u %.2t  %.19S %.6D %20Y %R&quot;</B>,
+<B>--sort=S</B> and <B>--states=PENDING</B>.
+Any of these options may be explicitly changed as desired by
+combining the <B>--start</B> option with other option values
+(e.g. to use a different output format).
+The expected start time of pending jobs is only available if the
+SLURM is configured to use the backfill scheduling plugin.
+<P>
+<a id="OPT_states=&lt;state_list&gt;"></a>
+<DT><B>-t &lt;state_list&gt;</B>, <B>--states=&lt;state_list&gt;</B><DD>
+Specify the states of jobs to view.  Accepts a comma separated list of
+state names or &quot;all&quot;. If &quot;all&quot; is specified then jobs of all states will be
+reported. If no state is specified then pending, running, and completing
+jobs are reported. Valid states (in both extended and compact form) include:
+PENDING (PD), RUNNING (R), SUSPENDED (S), STOPPED (ST),
+COMPLETING (CG), COMPLETED (CD), CONFIGURING (CF), CANCELLED (CA),
+FAILED (F), TIMEOUT (TO), PREEMPTED (PR), BOOT_FAIL (BF) , NODE_FAIL (NF)
+and SPECIAL_EXIT (SE).
+Note the <B>&lt;state_list&gt;</B> supplied is case insensitive (&quot;pd&quot; and &quot;PD&quot; are
+equivalent).
+See the <B>JOB STATE CODES</B> section below for more information.
+<P>
+<a id="OPT_user=&lt;user_list&gt;"></a>
+<DT><B>-u &lt;user_list&gt;</B>, <B>--user=&lt;user_list&gt;</B><DD>
+Request jobs or job steps from a comma separated list of users.
+The list can consist of user names or user id numbers.
+Performance of the command can be measurably improved for systems with large
+numbers of jobs when a single user is specified.
+<P>
+<a id="OPT_usage"></a>
+<DT><B>--usage</B><DD>
+Print a brief help message listing the <B>squeue</B> options.
+<P>
+<a id="OPT_verbose"></a>
+<DT><B>-v</B>, <B>--verbose</B><DD>
+Report details of squeues actions.
+<P>
+<a id="OPT_version"></a>
+<DT><B>-V</B> , <B>--version</B><DD>
+Print version information and exit.
+<P>
+<a id="OPT_nodelist=&lt;hostlist&gt;"></a>
+<DT><B>-w &lt;hostlist&gt;</B>, <B>--nodelist=&lt;hostlist&gt;</B><DD>
+Report only on jobs allocated to the specified node or list of nodes.
+This may either be the <B>NodeName</B> or <B>NodeHostname</B>
+as defined in <B><A HREF="slurm.conf.html">slurm.conf</A>(5)</B> in the event that they differ.
+A node_name of <B>localhost</B> is mapped to the current host name.
+<P>
+</DL>
+<A NAME="lbAF">&nbsp;</A>
+<a id="SECTION_JOB REASON CODES"></a>
+<H2>JOB REASON CODES</H2>
+
+These codes identify the reason that a job is waiting for execution.
+A job may be waiting for more than one reason, in which case only
+one of those reasons is displayed.
+<DL COMPACT>
+<a id="OPT_AssociationJobLimit"></a>
+<DT><B>AssociationJobLimit</B><DD>
+The job's association has reached its maximum job count.
+<a id="OPT_AssociationResourceLimit"></a>
+<DT><B>AssociationResourceLimit</B><DD>
+The job's association has reached some resource limit.
+<a id="OPT_AssociationTimeLimit"></a>
+<DT><B>AssociationTimeLimit</B><DD>
+The job's association has reached its time limit.
+<a id="OPT_BadConstraints"></a>
+<DT><B>BadConstraints</B><DD>
+The job's constraints can not be satisfied.
+<a id="OPT_BeginTime"></a>
+<DT><B>BeginTime</B><DD>
+The job's earliest start time has not yet been reached.
+<a id="OPT_BlockFreeAction"></a>
+<DT><B>BlockFreeAction</B><DD>
+An IBM BlueGene block is being freedand can not allow more jobs to start.
+<a id="OPT_BlockMaxError"></a>
+<DT><B>BlockMaxError</B><DD>
+An IBM BlueGene block has too many cnodes in error state to allow more jobs to start.
+<a id="OPT_Cleaning"></a>
+<DT><B>Cleaning</B><DD>
+The job is being requeued and still cleaning up from its previous execution.
+<a id="OPT_Dependency"></a>
+<DT><B>Dependency</B><DD>
+This job is waiting for a dependent job to complete.
+<a id="OPT_FrontEndDown"></a>
+<DT><B>FrontEndDown</B><DD>
+No front end node is available to execute this job.
+<a id="OPT_InactiveLimit"></a>
+<DT><B>InactiveLimit</B><DD>
+The job reached the system InactiveLimit.
+<a id="OPT_InvalidAccount"></a>
+<DT><B>InvalidAccount</B><DD>
+The job's account is invalid.
+<a id="OPT_InvalidQOS"></a>
+<DT><B>InvalidQOS</B><DD>
+The job's QOS is invalid.
+<a id="OPT_JobHeldAdmin"></a>
+<DT><B>JobHeldAdmin</B><DD>
+The job is held by a system administrator.
+<a id="OPT_JobHeldUser"></a>
+<DT><B>JobHeldUser</B><DD>
+The job is held by the user.
+<a id="OPT_JobLaunchFailure"></a>
+<DT><B>JobLaunchFailure</B><DD>
+The job could not be launched.
+This may be due to a file system problem, invalid program name, etc.
+<a id="OPT_Licenses"></a>
+<DT><B>Licenses</B><DD>
+The job is waiting for a license.
+<a id="OPT_NodeDown"></a>
+<DT><B>NodeDown</B><DD>
+A node required by the job is down.
+<a id="OPT_NonZeroExitCode"></a>
+<DT><B>NonZeroExitCode</B><DD>
+The job terminated with a non-zero exit code.
+<a id="OPT_PartitionDown"></a>
+<DT><B>PartitionDown</B><DD>
+The partition required by this job is in a DOWN state.
+<a id="OPT_PartitionInactive"></a>
+<DT><B>PartitionInactive</B><DD>
+The partition required by this job is in an Inactive state and not able to
+start jobs.
+<a id="OPT_PartitionNodeLimit"></a>
+<DT><B>PartitionNodeLimit</B><DD>
+The number of nodes required by this job is outside of it's
+partitions current limits.
+Can also indicate that required nodes are DOWN or DRAINED.
+<a id="OPT_PartitionTimeLimit"></a>
+<DT><B>PartitionTimeLimit</B><DD>
+The job's time limit exceeds it's partition's current time limit.
+<a id="OPT_Priority"></a>
+<DT><B>Priority</B><DD>
+One or more higher priority jobs exist for this partition or advanced reservation.
+<a id="OPT_Prolog"></a>
+<DT><B>Prolog</B><DD>
+It's PrologSlurmctld program is still running.
+<a id="OPT_QOSJobLimit"></a>
+<DT><B>QOSJobLimit</B><DD>
+The job's QOS has reached its maximum job count.
+<a id="OPT_QOSResourceLimit"></a>
+<DT><B>QOSResourceLimit</B><DD>
+The job's QOS has reached some resource limit.
+<a id="OPT_QOSTimeLimit"></a>
+<DT><B>QOSTimeLimit</B><DD>
+The job's QOS has reached its time limit.
+<a id="OPT_ReqNodeNotAvail"></a>
+<DT><B>ReqNodeNotAvail</B><DD>
+Some node specifically required by the job is not currently available.
+<a id="OPT_Reservation"></a>
+<DT><B>Reservation</B><DD>
+The job is waiting its advanced reservation to become available.
+<a id="OPT_Resources"></a>
+<DT><B>Resources</B><DD>
+The job is waiting for resources to become available.
+<a id="OPT_SystemFailure"></a>
+<DT><B>SystemFailure</B><DD>
+Failure of the SLURM system, a file system, the network, etc.
+<a id="OPT_TimeLimit"></a>
+<DT><B>TimeLimit</B><DD>
+The job exhausted its time limit.
+<a id="OPT_QOSUsageThreshold"></a>
+<DT><B>QOSUsageThreshold</B><DD>
+Required QOS threshold has been breached.
+<a id="OPT_WaitingForScheduling"></a>
+<DT><B>WaitingForScheduling</B><DD>
+No reason has been set for this job yet.
+Waiting for the scheduler to determine the appropriate reason.
+<P>
+</DL>
+<A NAME="lbAG">&nbsp;</A>
+<a id="SECTION_JOB STATE CODES"></a>
+<H2>JOB STATE CODES</H2>
+
+Jobs typically pass through several states in the course of their
+execution.
+The typical states are PENDING, RUNNING, SUSPENDED, COMPLETING, and COMPLETED.
+An explanation of each state follows.
+<DL COMPACT>
+<a id="OPT_BF  BOOT_FAIL"></a>
+<DT><B>BF  BOOT_FAIL</B><DD>
+Job terminated due to launch failure, typically due to a hardware failure
+(e.g. unable to boot the node or block and the job can not be requeued).
+<a id="OPT_CA  CANCELLED"></a>
+<DT><B>CA  CANCELLED</B><DD>
+Job was explicitly cancelled by the user or system administrator.
+The job may or may not have been initiated.
+<a id="OPT_CD  COMPLETED"></a>
+<DT><B>CD  COMPLETED</B><DD>
+Job has terminated all processes on all nodes.
+<a id="OPT_CF  CONFIGURING"></a>
+<DT><B>CF  CONFIGURING</B><DD>
+Job has been allocated resources, but are waiting for them to become ready for use
+(e.g. booting).
+<a id="OPT_CG  COMPLETING"></a>
+<DT><B>CG  COMPLETING</B><DD>
+Job is in the process of completing. Some processes on some nodes may still be active.
+<a id="OPT_F   FAILED"></a>
+<DT><B>F   FAILED</B><DD>
+Job terminated with non-zero exit code or other failure condition.
+<a id="OPT_NF  NODE_FAIL"></a>
+<DT><B>NF  NODE_FAIL</B><DD>
+Job terminated due to failure of one or more allocated nodes.
+<a id="OPT_PD  PENDING"></a>
+<DT><B>PD  PENDING</B><DD>
+Job is awaiting resource allocation.
+<a id="OPT_PR  PREEMPTED"></a>
+<DT><B>PR  PREEMPTED</B><DD>
+Job terminated due to preemption.
+<a id="OPT_R   RUNNING"></a>
+<DT><B>R   RUNNING</B><DD>
+Job currently has an allocation.
+<a id="OPT_SE  SPECIAL_EXIT"></a>
+<DT><B>SE  SPECIAL_EXIT</B><DD>
+The job was requeued in a special state. This state can be set by
+users, typically in EpilogSlurmctld, if the job has terminated with
+a particular exit value.
+<a id="OPT_ST  STOPPED"></a>
+<DT><B>ST  STOPPED</B><DD>
+Job has an allocation, but execution has been stopped with SIGSTOP signal.
+CPUS have been retained by this job.
+<a id="OPT_S   SUSPENDED"></a>
+<DT><B>S   SUSPENDED</B><DD>
+Job has an allocation, but execution has been suspended and CPUs have been
+released for other jobs.
+<a id="OPT_TO  TIMEOUT"></a>
+<DT><B>TO  TIMEOUT</B><DD>
+Job terminated upon reaching its time limit.
+<P>
+<P>
+</DL>
+<A NAME="lbAH">&nbsp;</A>
+<a id="SECTION_ENVIRONMENT VARIABLES"></a>
+<H2>ENVIRONMENT VARIABLES</H2>
+
+<P>
+
+Some <B>squeue</B> options may be set via environment variables. These
+environment variables, along with their corresponding options, are listed
+below. (Note: Commandline options will always override these settings.)
+<DL COMPACT>
+<a id="OPT_SLURM_BITSTR_LEN"></a>
+<DT><B>SLURM_BITSTR_LEN</B><DD>
+Specifies the string length to be used for holding a job array's task ID
+expression.
+The default value is 64 bytes.
+A value of 0 will print the full expression with any length required.
+Larger values may adversely impact the application performance.
+<a id="OPT_SLURM_CLUSTERS"></a>
+<DT><B>SLURM_CLUSTERS</B><DD>
+Same as <B>--clusters</B>
+<a id="OPT_SLURM_CONF"></a>
+<DT><B>SLURM_CONF</B><DD>
+The location of the SLURM configuration file.
+<a id="OPT_SLURM_TIME_FORMAT"></a>
+<DT><B>SLURM_TIME_FORMAT</B><DD>
+Specify the format used to report time stamps. A value of <I>standard</I>, the
+default value, generates output in the form &quot;year-month-dateThour:minute:second&quot;.
+A value of <I>relative</I> returns only &quot;hour:minute:second&quot; if the current day.
+For other dates in the current year it prints the &quot;hour:minute&quot; preceded by
+&quot;Tomorr&quot; (tomorrow), &quot;Ystday&quot; (yesterday), the name of the day for the coming
+week (e.g. &quot;Mon&quot;, &quot;Tue&quot;, etc.), otherwise the date (e.g. &quot;25 Apr&quot;).
+For other years it returns a date month and year without a time (e.g.
+&quot;6 Jun 2012&quot;). All of the time stamps use a 24 hour format.
+<P>
+A valid strftime() format can also be specified. For example, a value of
+&quot;%a %T&quot; will report the day of the week and a time stamp (e.g. &quot;Mon 12:34:56&quot;).
+<a id="OPT_SQUEUE_ACCOUNT"></a>
+<DT><B>SQUEUE_ACCOUNT</B><DD>
+<B>-A &lt;account_list&gt;, --account=&lt;account_list&gt;</B>
+<a id="OPT_SQUEUE_ALL"></a>
+<DT><B>SQUEUE_ALL</B><DD>
+<B>-a, --all</B>
+<a id="OPT_SQUEUE_ARRAY"></a>
+<DT><B>SQUEUE_ARRAY</B><DD>
+<B>-r, --array</B>
+<a id="OPT_SQUEUE_NAMES"></a>
+<DT><B>SQUEUE_NAMES</B><DD>
+<B>--name=&lt;name_list&gt;</B>
+<a id="OPT_SQUEUE_FORMAT"></a>
+<DT><B>SQUEUE_FORMAT</B><DD>
+<B>-o &lt;output_format&gt;, --format=&lt;output_format&gt;</B>
+<a id="OPT_SQUEUE_FORMAT2"></a>
+<DT><B>SQUEUE_FORMAT2</B><DD>
+<B>-O &lt;output_format&gt;, --Format=&lt;output_format&gt;</B>
+<a id="OPT_SQUEUE_LICENSES"></a>
+<DT><B>SQUEUE_LICENSES</B><DD>
+<B>-p-l &lt;license_list&gt;, --license=&lt;license_list&gt;</B>
+<a id="OPT_SQUEUE_PARTITION"></a>
+<DT><B>SQUEUE_PARTITION</B><DD>
+<B>-p &lt;part_list&gt;, --partition=&lt;part_list&gt;</B>
+<a id="OPT_SQUEUE_PRIORITY"></a>
+<DT><B>SQUEUE_PRIORITY</B><DD>
+<B>-P</B>, <B>--priority</B>
+<a id="OPT_SQUEUE_QOS"></a>
+<DT><B>SQUEUE_QOS</B><DD>
+<B>-p &lt;qos_list&gt;, --qos=&lt;qos_list&gt;</B>
+<a id="OPT_SQUEUE_SORT"></a>
+<DT><B>SQUEUE_SORT</B><DD>
+<B>-S &lt;sort_list&gt;, --sort=&lt;sort_list&gt;</B>
+<a id="OPT_SQUEUE_STATES"></a>
+<DT><B>SQUEUE_STATES</B><DD>
+<B>-t &lt;state_list&gt;, --states=&lt;state_list&gt;</B>
+<a id="OPT_SQUEUE_USERS"></a>
+<DT><B>SQUEUE_USERS</B><DD>
+<B>-u &lt;user_list&gt;, --users=&lt;user_list&gt;</B>
+<P>
+</DL>
+<A NAME="lbAI">&nbsp;</A>
+<a id="SECTION_EXAMPLES"></a>
+<H2>EXAMPLES</H2>
+
+
+Print the jobs scheduled in the debug partition and in the
+COMPLETED state in the format with six right justified digits for
+the job id followed by the priority with an arbitrary fields size:
+<BR>
+
+# squeue -p debug -t COMPLETED -o &quot;%.6i %p&quot;
+<BR>
+
+<BR>&nbsp;JOBID&nbsp;PRIORITY
+<BR>
+
+<BR>&nbsp;65543&nbsp;99993
+<BR>
+
+<BR>&nbsp;65544&nbsp;99992
+<BR>
+
+<BR>&nbsp;65545&nbsp;99991
+
+
+<P>
+
+Print the job steps in the debug partition sorted by user:
+<BR>
+
+# squeue -s -p debug -S u
+<BR>
+
+<BR>&nbsp;&nbsp;STEPID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NAME&nbsp;PARTITION&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TIME&nbsp;NODELIST
+<BR>
+
+<BR>&nbsp;65552.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;&nbsp;&nbsp;&nbsp;alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:23&nbsp;dev[1-4]
+<BR>
+
+<BR>&nbsp;65562.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;big_run&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bob&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0:18&nbsp;dev22
+<BR>
+
+<BR>&nbsp;65550.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;param1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;&nbsp;candice&nbsp;&nbsp;&nbsp;1:43:21&nbsp;dev[6-12]
+
+
+<P>
+
+Print information only about jobs 12345,12345, and 12348:
+<BR>
+
+# squeue --jobs 12345,12346,12348
+<BR>
+
+<BR>&nbsp;JOBID&nbsp;PARTITION&nbsp;NAME&nbsp;USER&nbsp;ST&nbsp;&nbsp;TIME&nbsp;&nbsp;NODES&nbsp;NODELIST(REASON)
+<BR>
+
+<BR>&nbsp;12345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;job1&nbsp;dave&nbsp;&nbsp;R&nbsp;&nbsp;&nbsp;0:21&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;dev[9-12]
+<BR>
+
+<BR>&nbsp;12346&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;job2&nbsp;dave&nbsp;PD&nbsp;&nbsp;&nbsp;0:00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;(Resources)
+<BR>
+
+<BR>&nbsp;12348&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;job3&nbsp;ed&nbsp;&nbsp;&nbsp;PD&nbsp;&nbsp;&nbsp;0:00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;(Priority)
+
+
+<P>
+
+Print information only about job step 65552.1:
+<BR>
+
+# squeue --steps 65552.1
+<BR>
+
+<BR>&nbsp;&nbsp;STEPID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NAME&nbsp;PARTITION&nbsp;&nbsp;&nbsp;&nbsp;USER&nbsp;&nbsp;&nbsp;&nbsp;TIME&nbsp;&nbsp;NODELIST
+<BR>
+
+<BR>&nbsp;65552.1&nbsp;&nbsp;&nbsp;&nbsp;test2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;debug&nbsp;&nbsp;&nbsp;alice&nbsp;&nbsp;&nbsp;12:49&nbsp;&nbsp;dev[1-4]
+
+
+<P>
+<A NAME="lbAJ">&nbsp;</A>
+<a id="SECTION_COPYING"></a>
+<H2>COPYING</H2>
+
+Copyright (C) 2002-2007 The Regents of the University of California.
+Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+<BR>
+
+Copyright (C) 2008-2010 Lawrence Livermore National Security.
+<BR>
+
+Copyright (C) 2010-2014 SchedMD LLC.
+<P>
+
+This file is part of SLURM, a resource management program.
+For details, see &lt;<A HREF="http://slurm.schedmd.com/">http://slurm.schedmd.com/</A>&gt;.
+<P>
+
+SLURM is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.
+<P>
+
+SLURM is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+details.
+<A NAME="lbAK">&nbsp;</A>
+<a id="SECTION_SEE ALSO"></a>
+<H2>SEE ALSO</H2>
+
+<B><A HREF="scancel.html">scancel</A></B>(1), <B><A HREF="scontrol.html">scontrol</A></B>(1), <B><A HREF="sinfo.html">sinfo</A></B>(1),
+<B><A HREF="smap.html">smap</A></B>(1), <B><A HREF="srun.html">srun</A></B>(1),
+<B>slurm_load_ctl_conf</B> (3), <B>slurm_load_jobs</B> (3),
+<B>slurm_load_node</B> (3),
+<B>slurm_load_partitions</B> (3)
+<P>
+
+<HR>
+<A NAME="index">&nbsp;</A><H2>Index</H2>
+<DL>
+<DT><A HREF="#lbAB">NAME</A><DD>
+<DT><A HREF="#lbAC">SYNOPSIS</A><DD>
+<DT><A HREF="#lbAD">DESCRIPTION</A><DD>
+<DT><A HREF="#lbAE">OPTIONS</A><DD>
+<DT><A HREF="#lbAF">JOB REASON CODES</A><DD>
+<DT><A HREF="#lbAG">JOB STATE CODES</A><DD>
+<DT><A HREF="#lbAH">ENVIRONMENT VARIABLES</A><DD>
+<DT><A HREF="#lbAI">EXAMPLES</A><DD>
+<DT><A HREF="#lbAJ">COPYING</A><DD>
+<DT><A HREF="#lbAK">SEE ALSO</A><DD>
+</DL>
+<HR>
+This document was created by
+<i>man2html</i> using the manual pages.<BR>
+Time: 09:05:32 GMT, July 02, 2015
+</div> <!-- closes "row" -->
+</div> <!-- closes "content" -->
+<div id="row">
+<div id="footer">
+<div id="left">&nbsp;&nbsp;<a href="disclaimer.html" target="_blank" class="privacy">Legal Notices</a></div>
+<div id="right"><span class="ucrlnum"></span></div>
+</div>
+
+<div id="footer2">
+<div style="clear:both;"></div>
+</div>
+</div> <!-- closes "row" -->
+
+</div> <!-- closes "container" -->
+
+</body>
+</html>
